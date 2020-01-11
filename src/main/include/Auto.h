@@ -10,4 +10,5 @@
 class Auto {
  public:
   Auto();
+  
 };
