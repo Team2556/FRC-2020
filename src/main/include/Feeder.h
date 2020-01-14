@@ -7,8 +7,7 @@
 
 #pragma once
 
-class Auto {
+class Feeder {
  public:
-  Auto();
-  
+  Feeder();
 };

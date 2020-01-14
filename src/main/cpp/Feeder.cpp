@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#pragma once
+#include "Feeder.h"
 
-class Auto {
- public:
-  Auto();
-  
-};
+Feeder::Feeder() {}

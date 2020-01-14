@@ -7,8 +7,7 @@
 
 #pragma once
 
-class Auto {
+class ControlPanel {
  public:
-  Auto();
-  
+  ControlPanel();
 };

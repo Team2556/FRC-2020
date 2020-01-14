@@ -7,8 +7,7 @@
 
 #pragma once
 
-class Auto {
+class Climber {
  public:
-  Auto();
-  
+  Climber();
 };

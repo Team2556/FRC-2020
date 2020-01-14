@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#pragma once
+#include "Climber.h"
 
-class Auto {
- public:
-  Auto();
-  
-};
+Climber::Climber() {}

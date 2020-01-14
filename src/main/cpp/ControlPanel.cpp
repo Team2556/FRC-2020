@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#pragma once
+#include "ControlPanel.h"
 
-class Auto {
- public:
-  Auto();
-  
-};
+ControlPanel::ControlPanel() {}

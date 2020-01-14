@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#pragma once
+#include "Shooter.h"
 
-class Auto {
- public:
-  Auto();
-  
-};
+Shooter::Shooter() {}
