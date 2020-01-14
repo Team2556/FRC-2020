@@ -15,6 +15,9 @@ class OI {
  public:
   OI();
 
+  float fMoveForward();
+  float fRotate();
+
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};
     frc::XboxController   Xbox2{XBOX_TWO};

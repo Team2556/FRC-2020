@@ -8,8 +8,17 @@
 #include "OI.h"
 
 OI::OI() 
-    {
+{
 
-    }
+}
 
     
+float OI::fMoveForward()
+{
+    return -Xbox1.GetY(frc::XboxController::kLeftHand);
+}
+
+float OI::fRotate()
+{
+    return Xbox1.GetX(frc::XboxController::kRightHand);
+}
