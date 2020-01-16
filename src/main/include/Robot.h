@@ -16,6 +16,8 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include "rev/CANSparkMax.h"
+#include "ctre/Phoenix.h"
+#include "Limelight.h"
 
 
 
@@ -29,18 +31,38 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
 
+  /*
+  rev::CANSparkMax            MotorControl_L1{LEFT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax            MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+*/
 
-  rev::CANSparkMax        MotorControl_L1{LEFT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax        MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax        MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax        MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+  WPI_TalonSRX          MotorControl_LF{1};
+  WPI_TalonSRX          MotorControl_RF{2};
+  WPI_TalonSRX          MotorControl_LR{3};
+  WPI_TalonSRX          MotorControl_RR{4};
+  frc::MecanumDrive     RobotDrive{MotorControl_LF, MotorControl_LR, MotorControl_RF, MotorControl_RR};
 
+  WPI_TalonSRX                Shooter_Motor_1{SHOOTER_1};
+  WPI_TalonSRX                Shooter_Motor_2{SHOOTER_2};
+  WPI_TalonSRX                Turret_Motor{TURRET};
+
+
+
+  /*
   frc::SpeedControllerGroup   Left_Drive_Group{MotorControl_L1, MotorControl_L2};
   frc::SpeedControllerGroup   Right_Drive_Group{MotorControl_R1, MotorControl_R2};
 
-  frc::DifferentialDrive WestCoastDrive{Left_Drive_Group, Right_Drive_Group};
+  frc::DifferentialDrive      WestCoastDrive{Left_Drive_Group, Right_Drive_Group};
+  */
+ 
+  OI                          DriverCMD{};
 
-  OI                      DriverCMD{};
+
+  frc::DoubleSolenoid         Transmission{CAN_PCM, TRANSMISSION_LOW, TRANSMISSION_HIGH};
+
+  Limelight                   MagicVision;
 
   
 

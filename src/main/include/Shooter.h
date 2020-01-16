@@ -6,8 +6,38 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
+#include "Feeder.h"
+#include "frc/WPILib.h"
 
-class Shooter {
- public:
-  Shooter();
+class TurretPIDOutput : public frc::PIDOutput
+{
+	public:
+		TurretPIDOutput(float * pfYawPIDVar) : pfYawPID(pfYawPIDVar) {}
+
+		float       * pfYawPID;
+
+		void PIDWrite(double dOutput) { *pfYawPID = dOutput; }
 };
+
+
+class Shooter : frc::PIDSource
+{
+ public:
+  Shooter(Robot * pRobot, Feeder * pFeeder);
+
+  void AutoShoot();
+  void ShooterMain();
+  void Aim();
+
+  Robot * pRobot; 
+  Feeder * pFeeder;
+
+  //Stuff for pid controller
+  TurretPIDOutput     * pPIDOutput;
+	frc::PIDController  * pYawPID;
+  float fYawPIDValue;
+  void    PIDEnable(bool bEnable);
+  double  PIDGet();
+};
+

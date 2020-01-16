@@ -17,6 +17,17 @@ class OI {
 
   float fMoveForward();
   float fRotate();
+  float fStrafe(); //this is just for use when testing with mecanum
+  
+
+
+  enum DriveMode{Unknown, Manual, Automatic};
+  enum TransmissionState{High, Low};
+
+  TransmissionState       DriveGear;
+  DriveMode               CurrDriveMode;
+
+
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

@@ -14,9 +14,20 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "Drivebase.h"
+#include "Shooter.h"
+#include "Feeder.h"
+
+Drivebase         * WestDrive;
+Shooter           * pShooter;
+Feeder            * pFeeder;
+
+
 void Robot::RobotInit() 
 {
-  
+  WestDrive  = new Drivebase(this);
+  pFeeder = new Feeder();
+  pShooter = new Shooter(this, pFeeder);
 }
 
 
@@ -43,9 +54,15 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 {
-  WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
+  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
+  RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
+  pShooter->ShooterMain();
 }
 
+void Robot::TestPeriodic()
+{
+  
+}
 
 
 #ifndef RUNNING_FRC_TESTS
