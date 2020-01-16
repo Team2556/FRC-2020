@@ -7,4 +7,15 @@
 
 #include "Feeder.h"
 
-Feeder::Feeder() {}
+Feeder::Feeder(Robot * pRobot) {
+    this->pRobot = pRobot;
+}
+//up function, down function
+
+
+//========================================================================================================
+//Function to spin balls to go up feeder
+//========================================================================================================
+void Feeder::GoUpManual(float power) {
+    pRobot->FeederMotor.Set(ControlMode::PercentOutput, power);
+}

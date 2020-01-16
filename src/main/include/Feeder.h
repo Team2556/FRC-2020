@@ -6,8 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
 
 class Feeder {
  public:
-  Feeder();
+  Feeder(Robot * pRobot);
+  Robot * pRobot;
+
+
+  void GoUpManual(float power);
 };

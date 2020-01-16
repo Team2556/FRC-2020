@@ -8,12 +8,29 @@
 #pragma once
 
 #include <string>
-
-#include <frc/IterativeRobot.h>
+#include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include "ctre\Phoenix.h"
+#include "AHRS.h"
+#include "frc/WPILib.h"
+#include <frc/PowerDistributionPanel.h>
+#include <iostream>
+#include "rev/CANSparkMax.h"
+#include "rev/ColorSensorV3.h"
+#include <frc/util/Color.h>
+#include <frc/DriverStation.h>
 
-class Robot : public frc::IterativeRobot {
+
+class Robot : public frc::TimedRobot {
  public:
+
+
+
+  PowerDistributionPanel    PDP{0};
+  frc::Preferences       *  pPrefs;
+
+  WPI_TalonSRX    FeederMotor{CAN_FEEDER};
+
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;

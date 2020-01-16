@@ -8,12 +8,15 @@
 #pragma once
 
 #include "frc/wpilib.h"
-
+#include "Robot.h"
 #include "RobotMap.h"
 
 class OI {
  public:
   OI();
+
+  float CPRotate();
+
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

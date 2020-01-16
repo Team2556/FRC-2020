@@ -6,8 +6,20 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
 
 class ControlPanel {
  public:
-  ControlPanel();
+  ControlPanel(Robot * pRobot);
+  Robot * pRobot;
+  static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
+  rev::ColorSensorV3    ColorSensor{i2cPort};
+  
+  WPI_TalonSRX          CtrlPanelMotor{4};
+
+  void ColorTest();
+  void Rotate(int spinNum);
+  char DetermineColor();
+  void ManualRotate(int i);
+  char GetColorNeeded();
 };

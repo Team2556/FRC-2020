@@ -7,7 +7,16 @@
 
 #include "TeleopMain.h"
 
-TeleopMain::TeleopMain() 
+
+
+TeleopControl::TeleopControl(Robot * pRobot, ControlPanel * CtrlPanelObj) 
     {
-        
+        this->pRobot = pRobot;   
+        this->CtrlPanelObj  = CtrlPanelObj;
     }
+
+void TeleopControl::TeleopMain() 
+{
+    CtrlPanelObj->ColorTest();
+    //CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPRotate());
+}
