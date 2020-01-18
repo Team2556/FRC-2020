@@ -15,6 +15,7 @@
 #define         SHOOTER_2               2
 #define         TURRET                  9
 #define         CAN_FEEDER              10
+#define         CPMOTOR                 11
 
 #define         CAN_PCM                 20
 
