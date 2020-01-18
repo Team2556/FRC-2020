@@ -71,7 +71,7 @@ void Shooter::TestShoot()
 		}
 		frc::SmartDashboard::PutNumber("Shooter Speed", speed);
 		frc::SmartDashboard::PutBoolean("Ramping", false);
-		pRobot->Shooter_Motor_1.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, maxvelocity*.8);
+		pRobot->Shooter_Motor_1.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, maxvelocity*.95);
 		pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
 
 

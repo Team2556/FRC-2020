@@ -9,14 +9,18 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, ControlPanel * CtrlPanelObj) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj) 
     {
         this->pRobot = pRobot;   
+        this->WestCoast = WestCoast;
         this->CtrlPanelObj  = CtrlPanelObj;
     }
 
 void TeleopControl::TeleopMain() 
 {
-    CtrlPanelObj->ColorTest();
+    //CtrlPanelObj->ColorTest();
     //CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPRotate());
+    pRobot->DriverCMD.UpdateOI();
+    WestCoast->Drive();
+    
 }

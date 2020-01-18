@@ -6,18 +6,19 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+
 #include "Robot.h"
-#include "Drivebase.h"
-#include "ControlPanel.h"
 
-class TeleopControl {
+class Drivebase {
  public:
-  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj);
+  Drivebase(Robot * pRobot);
+  void Drive();
+  void ManualDrive(float fForward, float fRotate);
+  void AutomaticDrive(float fForward, float fRotate);
 
-   Robot           * pRobot;
-   Drivebase       * WestCoast;
-   ControlPanel    * CtrlPanelObj;
+  Robot * pRobot;
+
   
-  void TeleopMain();
+
 
 };
