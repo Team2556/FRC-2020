@@ -6,8 +6,12 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
 
 class Climber {
  public:
-  Climber();
+  Climber(Robot * pRobot);
+  Robot * pRobot;
+
+  void climbUpDown(float i);
 };

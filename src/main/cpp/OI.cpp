@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -66,6 +67,24 @@ float OI::CPRotate()
 }
 
 
+//==============================================================================
+
+float OI::fClimb()
+{
+    if(Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) < 0.1)
+    {
+        return Xbox2.GetTriggerAxis(frc::XboxController::kRightHand); 
+    } 
+    else if (Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) < 0.1)  
+    {
+        return Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand);
+    }
+    else
+    {
+        return 0;
+    }
+    
+}
 
 // ----------------------------------------------------------------------------
 // Test commands

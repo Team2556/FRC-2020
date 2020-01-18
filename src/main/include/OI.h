@@ -21,6 +21,8 @@ class OI {
   float fRotate();
   float fStrafe(); //this is just for use when testing with mecanum
 
+  float fClimb();
+
   
 
 
