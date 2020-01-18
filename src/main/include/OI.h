@@ -8,16 +8,19 @@
 #pragma once
 
 #include "frc/wpilib.h"
-
 #include "RobotMap.h"
 
 class OI {
  public:
   OI();
 
+  //General Functions
+  void UpdateOI();
+
   float fMoveForward();
   float fRotate();
   float fStrafe(); //this is just for use when testing with mecanum
+
   
 
 
@@ -27,6 +30,14 @@ class OI {
   TransmissionState       DriveGear;
   DriveMode               CurrDriveMode;
 
+
+
+  float CPRotate();
+
+
+  // Test commands
+  bool      bTestButton(int iButton);
+  float     fTestValue(int iControl);
 
 
   protected:

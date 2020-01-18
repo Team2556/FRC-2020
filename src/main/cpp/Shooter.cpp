@@ -56,3 +56,33 @@ void Shooter::PIDEnable(bool bEnable)
 	pYawPID->Disable(); // PROBABLY DON'T NEED
 	}
 }
+
+
+void Shooter::TestShoot()
+{	
+	frc::SmartDashboard::PutNumber("Encoder Velocity", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
+	if (pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() <= (-15000))
+	{
+		float maxvelocity = -24600;
+		static float speed = 0.0;
+		if (pRobot->DriverCMD.bTestButton(6))
+		{
+			speed = pRobot->DriverCMD.fTestValue(5);
+		}
+		frc::SmartDashboard::PutNumber("Shooter Speed", speed);
+		frc::SmartDashboard::PutBoolean("Ramping", false);
+		pRobot->Shooter_Motor_1.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, maxvelocity*.8);
+		pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
+
+
+		
+	}
+	else 
+	{
+		pRobot->Shooter_Motor_1.Set(rampspeed);
+		pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
+		rampspeed -= .001;
+		frc::SmartDashboard::PutNumber("Ramp Speed", rampspeed);
+		frc::SmartDashboard::PutBoolean("Ramping", true);
+	}
+}

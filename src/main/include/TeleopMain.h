@@ -6,8 +6,17 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
+#include "ControlPanel.h"
+#include "OI.h"
 
-class TeleopMain {
+class TeleopControl {
  public:
-  TeleopMain();
+  TeleopControl(Robot * pRobot, ControlPanel * CtrlPanelObj);
+
+   Robot           * pRobot;
+   ControlPanel    * CtrlPanelObj;
+  
+  void TeleopMain();
+
 };

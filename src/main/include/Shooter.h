@@ -30,8 +30,13 @@ class Shooter : frc::PIDSource
   void ShooterMain();
   void Aim();
 
+  void TestShoot();
+
   Robot * pRobot; 
   Feeder * pFeeder;
+
+
+  float rampspeed;
 
   //Stuff for pid controller
   TurretPIDOutput     * pPIDOutput;

@@ -15,6 +15,22 @@ OI::OI()
 
 
 //==============================================================================
+//General
+//==============================================================================
+
+void OI::UpdateOI()
+{
+    if(Xbox1.GetBumper(frc::XboxController::kRightHand) && !Xbox1.GetBumper(frc::XboxController::kLeftHand))
+    {
+        this->DriveGear = OI::TransmissionState::High;
+    }
+    else if(Xbox1.GetBumper(frc::XboxController::kLeftHand) && !Xbox1.GetBumper(frc::XboxController::kRightHand))
+    {
+        this->DriveGear = OI::TransmissionState::Low;
+    }
+}
+
+//==============================================================================
 //Drivebase
 //==============================================================================
     
@@ -36,3 +52,115 @@ float OI::fRotate()
 
 
 //==============================================================================
+
+float OI::CPRotate()
+{
+    if(Xbox2.GetBButton())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+
+// ----------------------------------------------------------------------------
+// Test commands
+// ----------------------------------------------------------------------------
+
+// Designate some buttons as test buttons just to be able to test
+// some functionality.
+bool OI::bTestButton(int iButton)
+    {
+    bool    bButtonValue;
+
+    if ((iButton < 0) || (iButton > 5))
+        return false;
+
+#ifdef JOYSTICK
+    switch (iButton)
+        {
+        case 0  : bButtonValue = JStick1.GetRawButton( 2); break;   // Thumb
+        case 1  : bButtonValue = JStick1.GetRawButton(11); break;
+        case 2  : bButtonValue = JStick1.GetRawButton(12); break;
+        case 3  : bButtonValue = JStick1.GetRawButton( 9); break;
+        case 4  : bButtonValue = JStick1.GetRawButton(10); break;
+        case 5  : bButtonValue = JStick1.GetRawButton( 7); break;
+        default : bButtonValue = false;                    break;
+        }
+
+#else
+    switch (iButton)
+        {
+        case 0 :
+            bButtonValue = Xbox2.GetAButton();
+            break;
+        case 1 :
+            bButtonValue = Xbox2.GetBButton();
+            break;
+        case 2 :
+            bButtonValue = Xbox2.GetXButton();
+            break;
+        case 3 :
+            bButtonValue = Xbox2.GetYButtonPressed();
+            break;
+        case 4 :
+            bButtonValue = Xbox2.GetBumper(frc::XboxController::JoystickHand::kLeftHand);
+            break;
+        case 5 :
+            bButtonValue = Xbox2.GetBumper(frc::XboxController::JoystickHand::kRightHand);
+            break;
+        case 6:
+            bButtonValue = Xbox1.GetAButton();
+            break;
+        default :
+            bButtonValue = false;
+            break;
+        }
+#endif
+
+    return bButtonValue;
+    }
+
+
+// ----------------------------------------------------------------------------
+
+// Return a control test value
+// From -1.0 to +1.0
+float OI::fTestValue(int iControl)
+{
+    float   fControlValue;
+
+    if ((iControl < 0) || (iControl > 5))
+        return 0.0;
+
+    switch (iControl)
+        {
+        case 0 :
+            fControlValue = Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
+            break;
+        case 1 :
+            fControlValue = Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kLeftHand);
+            break;
+        case 2 :
+            fControlValue = Xbox2.GetX(frc::XboxController::kLeftHand);
+            break;
+        case 3 :
+            fControlValue = Xbox2.GetY(frc::XboxController::kLeftHand);
+            break;
+        case 4 :
+            fControlValue = Xbox1.GetTriggerAxis(frc::XboxController::kRightHand);
+            break;
+        case 5 :
+            fControlValue = Xbox1.GetY(frc::XboxController::kLeftHand);
+            break;
+        default :
+            fControlValue = 0.0;
+            break;
+        }
+
+    return fControlValue;
+}

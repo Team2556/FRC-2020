@@ -6,13 +6,14 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
-
-
+#include "ControlPanel.h"
+#include "Feeder.h"
+#include "TeleopMain.h"
+#include "Auto.h"
 
 #include <iostream>
 
-#include <frc/smartdashboard/SmartDashboard.h>
+
 
 #include "Drivebase.h"
 #include "Shooter.h"
@@ -21,13 +22,15 @@
 Drivebase         * WestDrive;
 Shooter           * pShooter;
 Feeder            * pFeeder;
+ControlPanel        * CtrlPanel;
 
 
 void Robot::RobotInit() 
 {
   WestDrive  = new Drivebase(this);
-  pFeeder = new Feeder();
+  pFeeder = new Feeder(this);
   pShooter = new Shooter(this, pFeeder);
+  CtrlPanel = new ControlPanel(this);
 }
 
 
@@ -49,14 +52,16 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() 
 {
-
+  pShooter->rampspeed = 0;
 }
 
 void Robot::TeleopPeriodic() 
 {
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
-  pShooter->ShooterMain();
+  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
+  //pShooter->ShooterMain();
+  //WestDrive->Drive();
+  pShooter->TestShoot();
 }
 
 void Robot::TestPeriodic()
