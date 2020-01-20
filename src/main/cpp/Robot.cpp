@@ -7,20 +7,19 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-#include "ControlPanel.h"
-#include "Feeder.h"
-#include "TeleopMain.h"
+
+#include "TeleopControl.h"
 #include "Auto.h"
 
 #include <iostream>
 
-
-
 #include "Drivebase.h"
 #include "Shooter.h"
 #include "Feeder.h"
+#include "ControlPanel.h"
+#include "Feeder.h"
 
-TeleopControl     * TeleopMain;
+TeleopControl     * pTeleop;
 Drivebase         * WestDrive;
 Shooter           * pShooter;
 Feeder            * pFeeder;
@@ -33,7 +32,7 @@ void Robot::RobotInit()
   pFeeder = new Feeder(this);
   pShooter = new Shooter(this, pFeeder);
   CtrlPanel = new ControlPanel(this);
-  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel);
+  pTeleop  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter);
 }
 
 
@@ -55,17 +54,13 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() 
 {
-  pShooter->rampspeed = 0;
+  pTeleop->TeleopInit();
 }
 
 void Robot::TeleopPeriodic() 
 {
-  WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
-  //pShooter->ShooterMain();
-  //WestDrive->Drive();
-  //pShooter->TestShoot();
-  //TeleopMain->TeleopMain();
+  pTeleop->TeleopInit();
+  //pTeleop->TeleopMain();
 }
 
 void Robot::TestPeriodic()

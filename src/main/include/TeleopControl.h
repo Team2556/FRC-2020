@@ -8,11 +8,20 @@
 #pragma once
 #include "Robot.h"
 #include "Drivebase.h"
+#include "ControlPanel.h"
 #include "Shooter.h"
-#include "Feeder.h"
 
-class Auto {
+class TeleopControl {
  public:
-  Auto();
+  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter);
+
+   Robot           * pRobot;
+   Drivebase       * WestCoast;
+   ControlPanel    * CtrlPanelObj;
+   Shooter           * pShooter;
   
+  void TeleopInit();
+  void TeleopMain();
+  void TeleopTest();
+
 };
