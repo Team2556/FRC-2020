@@ -8,16 +8,40 @@
 #pragma once
 
 #include "frc/wpilib.h"
-#include "Robot.h"
 #include "RobotMap.h"
 
 class OI {
  public:
   OI();
 
-  float CPRotate();
+  //General Functions
+  void UpdateOI();
+
+  float fMoveForward();
+  float fRotate();
+  float fStrafe(); //this is just for use when testing with mecanum
+
+  float fClimb();
+
+  
+
+
+  enum DriveMode{Unknown, Manual, Automatic};
+  enum TransmissionState{High, Low};
+
+  TransmissionState       DriveGear;
+  DriveMode               CurrDriveMode;
+
+
+
+  bool CPRotate();
   float CPManualRotate();
-  float CPToColor();
+  bool CPToColor();
+
+  // Test commands
+  bool      bTestButton(int iButton);
+  float     fTestValue(int iControl);
+
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

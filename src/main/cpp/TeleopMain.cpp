@@ -9,9 +9,10 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, ControlPanel * CtrlPanelObj) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj) 
     {
         this->pRobot = pRobot;   
+        this->WestCoast = WestCoast;
         this->CtrlPanelObj  = CtrlPanelObj;
     }
 
@@ -19,18 +20,23 @@ void TeleopControl::TeleopMain()
 {
     //=======================================================================================================
     //Control Panel
-    //=========================================
+    //=======================================================================================================
     CtrlPanelObj->ColorTest();
     //Rotates control panel when B is pressed on Xbox2
     CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPRotate());
-    if(pRobot->DriverCMD.CPRotate == 1)
+    if(pRobot->DriverCMD.CPRotate())
     {
         //Rotates the control panel argument times when left bumper is pressed on Xbox2
         CtrlPanelObj->Rotate(3);
     }
-    if(pRobot->DriverCMD.CPToColor() == 1)
+    if(pRobot->DriverCMD.CPToColor())
     {
         //Rotates the control panel to game data value ('R', 'G', 'B', or 'Y') when right bumper is pressed on Xbox2
         CtrlPanelObj->RotateToColor();
     }
+    //=======================================================================================================
+
+
+    pRobot->DriverCMD.UpdateOI();
+    WestCoast->Drive();
 }

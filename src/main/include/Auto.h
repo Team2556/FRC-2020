@@ -6,6 +6,10 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Robot.h"
+#include "Drivebase.h"
+#include "Shooter.h"
+#include "Feeder.h"
 
 class Auto {
  public:

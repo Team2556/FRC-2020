@@ -5,14 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Climber.h"
+#pragma once
+#include "Robot.h"
+#include "Drivebase.h"
+#include "ControlPanel.h"
+#include "Shooter.h"
 
-Climber::Climber(Robot * pRobot) 
-{
-    this->pRobot = pRobot;
-}
+class TeleopControl {
+ public:
+  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter);
 
-void Climber::climbUpDown(float i)
-{
-    pRobot->ClimbingMotor.Set(ControlMode::PercentOutput, i);
-}
+   Robot           * pRobot;
+   Drivebase       * WestCoast;
+   ControlPanel    * CtrlPanelObj;
+   Shooter           * pShooter;
+  
+  void TeleopInit();
+  void TeleopMain();
+  void TeleopTest();
+
+};

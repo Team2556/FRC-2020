@@ -7,14 +7,15 @@
 
 #pragma once
 #include "Robot.h"
+#include "Drivebase.h"
 #include "ControlPanel.h"
-#include "OI.h"
 
 class TeleopControl {
  public:
-  TeleopControl(Robot * pRobot, ControlPanel * CtrlPanelObj);
+  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj);
 
    Robot           * pRobot;
+   Drivebase       * WestCoast;
    ControlPanel    * CtrlPanelObj;
   
   void TeleopMain();

@@ -5,14 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Climber.h"
+#pragma once
 
-Climber::Climber(Robot * pRobot) 
-{
-    this->pRobot = pRobot;
-}
+#include "Robot.h"
 
-void Climber::climbUpDown(float i)
-{
-    pRobot->ClimbingMotor.Set(ControlMode::PercentOutput, i);
-}
+class Drivebase {
+ public:
+  Drivebase(Robot * pRobot);
+  void Drive();
+  void ManualDrive(float fForward, float fRotate);
+  void AutomaticDrive(float fForward, float fRotate);
+
+  Robot * pRobot;
+
+  
+
+
+};
