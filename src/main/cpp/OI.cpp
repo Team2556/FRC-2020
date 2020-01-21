@@ -14,9 +14,33 @@ OI::OI()
 
 //==============================================================================
 
-float OI::CPRotate()
+float OI::CPManualRotate()
 {
     if(Xbox2.GetBButton())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+float OI::CPRotate()
+{
+    if(Xbox2.GetBumper(frc::XboxController::kLeftHand))
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+float OI::CPToColor()
+{
+    if(Xbox2.GetBumper(frc::XboxController::kRightHand))
     {
         return 1.0;
     }

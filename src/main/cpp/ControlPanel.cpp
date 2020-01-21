@@ -77,15 +77,28 @@ void ControlPanel::Rotate(int spinNum) {
         }
 
     }
-    else if(!done)
-    {
-        CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
-        char colorNeeded = ControlPanel::GetColorNeeded();
-        if(ControlPanel::DetermineColor() == colorNeeded) done = true;
-    }
-
+    
     frc::SmartDashboard::PutNumber("Rotations", rotations);
 
+}
+
+
+//===========================================================================================================
+//Rotates to the color returned from game data
+//===========================================================================================================
+void ControlPanel::RotateToColor()
+{
+    {
+        char colorNeeded = ControlPanel::GetColorNeeded();
+        if(ControlPanel::DetermineColor() == colorNeeded)
+        {
+            return;
+        }
+        else
+        {
+            CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
+        }
+    }
 }
 
 

@@ -16,7 +16,8 @@ class OI {
   OI();
 
   float CPRotate();
-
+  float CPManualRotate();
+  float CPToColor();
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

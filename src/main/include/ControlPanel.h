@@ -22,4 +22,5 @@ class ControlPanel {
   char DetermineColor();
   void ManualRotate(int i);
   char GetColorNeeded();
+  void RotateToColor();
 };

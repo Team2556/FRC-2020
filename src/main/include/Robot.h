@@ -29,7 +29,7 @@ class Robot : public frc::TimedRobot {
   PowerDistributionPanel    PDP{0};
   frc::Preferences       *  pPrefs;
 
-  WPI_TalonSRX    FeederMotor{CAN_FEEDER};
+  WPI_TalonSRX    FeederMotor{1};
 
   void RobotInit() override;
   void RobotPeriodic() override;
