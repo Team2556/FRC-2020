@@ -23,17 +23,21 @@ class OI {
 
   
 
-
+  
   enum DriveMode{Unknown, Manual, Automatic};
   enum TransmissionState{High, Low};
 
   TransmissionState       DriveGear;
   DriveMode               CurrDriveMode;
 
+//CoDriver COmmands
 
-
+  bool IntakeOut();
+  bool RunIntake();
+  bool ReverseIntake();
   float CPRotate();
 
+  bool bIntakeOut;
 
   // Test commands
   bool      bTestButton(int iButton);

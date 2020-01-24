@@ -29,6 +29,7 @@ class Shooter : frc::PIDSource
   void AutoShoot();
   void ShooterMain();
   void Aim();
+  void CountBalls();
 
   void TestShoot();
 
@@ -37,6 +38,7 @@ class Shooter : frc::PIDSource
 
 
   float rampspeed;
+  int BallsShot;
 
   //Stuff for pid controller
   TurretPIDOutput     * pPIDOutput;

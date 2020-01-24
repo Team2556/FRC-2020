@@ -8,7 +8,14 @@
 #include "Auto.h"
 #include <frc/WPILib.h>
 
-Auto::Auto() 
-    {
-        
-    }
+Auto::Auto(Robot * pRobot, Drivebase  * WestDrive) 
+{
+    this->pRobot = pRobot;
+    this->WestDrive = WestDrive;
+}
+
+void Auto::AutoMain()
+{
+    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0, OI::TransmissionState::Low);
+
+}

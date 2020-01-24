@@ -9,11 +9,12 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Feeder * pFeeder) 
     {
         this->pRobot = pRobot;   
-        this->WestCoast = WestCoast;
+        this->WestCoast = WestDrive;
         this->CtrlPanelObj  = CtrlPanelObj;
+        this->pFeeder = pFeeder;
     }
 
 void TeleopControl::TeleopMain() 
@@ -22,5 +23,6 @@ void TeleopControl::TeleopMain()
     //CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPRotate());
     pRobot->DriverCMD.UpdateOI();
     WestCoast->Drive();
+    pFeeder->IntakeMain();
     
 }

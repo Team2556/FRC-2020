@@ -15,4 +15,5 @@ class Feeder {
 
 
   void GoUpManual(float power);
+  void IntakeMain();
 };

@@ -6,9 +6,16 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include "Drivebase.h"
+#include "Robot.h"
 
 class Auto {
  public:
-  Auto();
+  Auto(Robot * pRobot, Drivebase  * WestDrive);
+  void AutoMain();
   
+  Drivebase       * WestDrive;
+  Robot           * pRobot;
+
+
 };

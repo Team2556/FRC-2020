@@ -69,6 +69,7 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                Shooter_Motor_1{SHOOTER_1};
   WPI_TalonSRX                Shooter_Motor_2{SHOOTER_2};
   WPI_TalonSRX                Turret_Motor{TURRET};
+  WPI_TalonSRX                Intake_Motor{CAN_INTAKE};
 
 
 
@@ -83,10 +84,17 @@ class Robot : public frc::TimedRobot {
 
 
   frc::DoubleSolenoid         Transmission{CAN_PCM, TRANSMISSION_LOW, TRANSMISSION_HIGH};
+  frc::DoubleSolenoid         Intake_Solenoid{CAN_PCM, INTAKE_OUT, INTAKE_IN};
 
   Limelight                   MagicVision;
 
   
+
+ //Test
+
+float encoderstart;
+
+
 
  private:
   frc::SendableChooser<std::string> m_chooser;
