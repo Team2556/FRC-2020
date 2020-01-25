@@ -8,7 +8,20 @@
 #include "Auto.h"
 #include <frc/WPILib.h>
 
-Auto::Auto() 
+Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter) 
     {
-        
+        this->pRobot = pRobot;   
+        this->WestCoast = WestCoast;
+        this->CtrlPanelObj  = CtrlPanelObj;
+        this->pShooter      = pShooter;
     }
+
+void Auto::AutoInit()
+{
+   // currentPosition = 0;
+}
+
+void Auto::AutoPeriodic()
+{
+    frc::SmartDashboard::PutNumber("ProcessVariable", currentPosition);
+}

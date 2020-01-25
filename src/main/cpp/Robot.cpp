@@ -24,6 +24,7 @@ Drivebase         * WestDrive;
 Shooter           * pShooter;
 Feeder            * pFeeder;
 ControlPanel      * CtrlPanel;
+Auto              * AutoCtrl;
 
 
 void Robot::RobotInit() 
@@ -33,6 +34,7 @@ void Robot::RobotInit()
   pShooter = new Shooter(this, pFeeder);
   CtrlPanel = new ControlPanel(this);
   pTeleop  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter);
+  AutoCtrl = new Auto(this, WestDrive, CtrlPanel, pShooter);
 }
 
 
@@ -54,12 +56,13 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() 
 {
-  pTeleop->TeleopInit();
+  AutoCtrl->AutoInit();
+  //pTeleop->TeleopInit();
 }
 
 void Robot::TeleopPeriodic() 
 {
-  pTeleop->TeleopInit();
+  AutoCtrl->AutoPeriodic();
   //pTeleop->TeleopMain();
 }
 

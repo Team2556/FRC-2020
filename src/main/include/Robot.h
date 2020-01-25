@@ -57,6 +57,8 @@ class Robot : public frc::TimedRobot {
   rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
 
+  rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
+
 /*
   WPI_TalonSRX          MotorControl_LF{1};
   WPI_TalonSRX          MotorControl_RF{2};
