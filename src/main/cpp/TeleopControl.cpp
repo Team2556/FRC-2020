@@ -29,8 +29,14 @@ void TeleopControl::TeleopMain()
     pRobot->DriverCMD.UpdateOI();
     pFeeder->IntakeMain();
     //pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
-  //pShooter->ShooterMain();
+    //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
+    //pShooter->ShooterMain();
     WestDrive->Drive();
-  //pShooter->TestShoot();
+    //pShooter->TestShoot();
+}
+
+void TeleopControl::TeleopTest()
+{
+  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
+  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
 }

@@ -33,7 +33,7 @@ void Robot::RobotInit()
   pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
-  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter);
+  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
   AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
 }
 
@@ -46,46 +46,30 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  MotorControl_L1.GetEncoder().SetPosition(0);
+
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
-  AutoControl->AutoMain();
+  
 }
 
 void Robot::TeleopInit() 
 {
-  AutoCtrl->AutoInit();
+  //AutoControl->AutoInit();
   //pTeleop->TeleopInit();
-  pShooter->rampspeed = 0;
-  //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  //MotorControl_L1.GetEncoder().SetPosition(0);
-  pShooter->BallsShot = 0;
 
 }
 
 void Robot::TeleopPeriodic() 
 {
-  AutoCtrl->AutoPeriodic();
-  //pTeleop->TeleopMain();
-  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
-  //pShooter->ShooterMain();
-  //WestDrive->Drive();
-  //pShooter->TestShoot();
-  //pFeeder->IntakeMain();
-  //frc::SmartDashboard::PutBoolean("Test", DriverCMD.ReverseIntake());
+  AutoControl->AutoPeriodic();
   //TeleopMain->TeleopMain();
-  //frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
-
 }
 
 void Robot::TestPeriodic()
 {
-  
+  TeleopMain->TeleopTest();
 }
 
 void Robot::DisabledInit()

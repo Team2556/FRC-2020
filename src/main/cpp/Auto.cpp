@@ -6,10 +6,9 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Auto.h"
-
 #include <frc/WPILib.h>
 
-<<<<<<< HEAD
+
 Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter) 
     {
         this->pRobot = pRobot;   
@@ -20,23 +19,19 @@ Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, S
 
 void Auto::AutoInit()
 {
-   // currentPosition = 0;
+    pRobot->m_encoder.SetPosition(0);
 }
 
 void Auto::AutoPeriodic()
 {
-    frc::SmartDashboard::PutNumber("ProcessVariable", currentPosition);
-}
-=======
-Auto::Auto(Robot * pRobot, Drivebase  * WestDrive) 
-{
-    this->pRobot = pRobot;
-    this->WestDrive = WestDrive;
+    frc::SmartDashboard::PutNumber("Encoder Position", CurrentAutoPosition());
+    
 }
 
-void Auto::AutoMain()
-{
-    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0, OI::TransmissionState::Low);
 
+
+float Auto::CurrentAutoPosition()
+{
+    return pRobot->m_encoder.GetPosition();
 }
->>>>>>> 73a6c05fe6aaf99cdf24b646ced8ddffe09b6e10
+

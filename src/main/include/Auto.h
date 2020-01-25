@@ -6,17 +6,14 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
-<<<<<<< HEAD
 #include "Robot.h"
 #include "ControlPanel.h"
-=======
->>>>>>> 73a6c05fe6aaf99cdf24b646ced8ddffe09b6e10
 #include "Drivebase.h"
-#include "Robot.h"
+#include "Shooter.h"
+#include "Feeder.h"
 
 class Auto {
  public:
-<<<<<<< HEAD
   Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter);
 
    Robot           * pRobot;
@@ -24,18 +21,10 @@ class Auto {
    ControlPanel    * CtrlPanelObj;
    Shooter           * pShooter;
 
-
   float currentPosition = pRobot->m_encoder.GetPosition();
 
   void AutoInit();
   void AutoPeriodic();
-=======
-  Auto(Robot * pRobot, Drivebase  * WestDrive);
-  void AutoMain();
->>>>>>> 73a6c05fe6aaf99cdf24b646ced8ddffe09b6e10
-  
-  Drivebase       * WestDrive;
-  Robot           * pRobot;
-
+  float CurrentAutoPosition();
 
 };
