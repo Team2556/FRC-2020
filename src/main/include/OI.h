@@ -25,14 +25,20 @@ class OI {
 
   
 
-
+  
   enum DriveMode{Unknown, Manual, Automatic};
   enum TransmissionState{High, Low};
 
   TransmissionState       DriveGear;
   DriveMode               CurrDriveMode;
 
+//CoDriver COmmands
 
+  bool IntakeOut();
+  bool RunIntake();
+  bool ReverseIntake();
+
+  bool bIntakeOut;
 
   bool CPRotate();
   float CPManualRotate();
@@ -42,6 +48,7 @@ class OI {
   bool      bTestButton(int iButton);
   float     fTestValue(int iControl);
 
+  bool  testBool();
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

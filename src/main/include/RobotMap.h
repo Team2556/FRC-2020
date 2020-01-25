@@ -15,8 +15,9 @@
 #define         SHOOTER_2               2
 #define         TURRET                  9
 #define         CAN_FEEDER              10
-#define         CPMOTOR                 11
+#define         CAN_INTAKE              11
 #define         CLIMBMOTOR              12
+#define         CPMOTOR                 13
 
 #define         CAN_PCM                 20
 
@@ -24,3 +25,5 @@
 //PCM Ports
 #define         TRANSMISSION_LOW        0
 #define         TRANSMISSION_HIGH       1
+#define         INTAKE_OUT              2
+#define         INTAKE_IN               3

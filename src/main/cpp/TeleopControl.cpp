@@ -9,12 +9,13 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder) 
     {
         this->pRobot = pRobot;   
-        this->WestCoast = WestCoast;
+        this->WestDrive = WestDrive;
         this->CtrlPanelObj  = CtrlPanelObj;
         this->pShooter      = pShooter;
+        this->pFeeder   = pFeeder;
     }
 
 void TeleopControl::TeleopInit()
@@ -23,11 +24,13 @@ void TeleopControl::TeleopInit()
 }
 
 
-void TeleopControl::TeleopTest()
+void TeleopControl::TeleopMain()
 {
-    pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
+    pRobot->DriverCMD.UpdateOI();
+    pFeeder->IntakeMain();
+    //pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
   //pShooter->ShooterMain();
-  //WestDrive->Drive();
+    WestDrive->Drive();
   //pShooter->TestShoot();
 }

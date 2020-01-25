@@ -7,10 +7,9 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(Robot * pRobot, Feeder * pFeeder) 
+Shooter::Shooter(Robot * pRobot) 
 {
     this->pRobot = pRobot;
-    this->pFeeder = pFeeder;
 
     pPIDOutput = new TurretPIDOutput(&fYawPIDValue);
     pYawPID    = new frc::PIDController(0.025, 0, .004, this, pPIDOutput);
@@ -63,7 +62,7 @@ void Shooter::TestShoot()
 	frc::SmartDashboard::PutNumber("Encoder Velocity", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
 	if (pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() <= (-15000))
 	{
-		float maxvelocity = -24600;
+		float maxvelocity = -26800;
 		static float speed = 0.0;
 		if (pRobot->DriverCMD.bTestButton(6))
 		{
@@ -84,5 +83,44 @@ void Shooter::TestShoot()
 		rampspeed -= .001;
 		frc::SmartDashboard::PutNumber("Ramp Speed", rampspeed);
 		frc::SmartDashboard::PutBoolean("Ramping", true);
+	}
+	CountBalls();
+	frc::SmartDashboard::PutNumber("Balls Shot", BallsShot);
+}
+
+bool comp(int a, int b) 
+{ 
+    return (a < b); 
+} 
+
+
+void Shooter::CountBalls()
+{
+	static float currents[3] = {0, 0, 0};
+	static float highestseen = 0.0;
+	float spike_current = 20;
+	currents[0] = currents[1];
+	currents[1] = currents[2];
+	currents[2] = pRobot->PDP.GetCurrent(0);
+
+	if (currents[2] > highestseen)
+	{
+		frc::SmartDashboard::PutNumber("MaxCurrent", currents[2]);
+		highestseen = currents[2];
+	}
+	frc::SmartDashboard::PutNumber("CurrentCurrent", currents[2]);
+
+	float maxcurrent = currents[0];
+	if (currents[1] > maxcurrent)
+	{
+		maxcurrent = currents[1];
+	}
+	if (currents[2] > maxcurrent)
+	{
+		maxcurrent = currents[2];
+	}
+	if ((currents[1] - currents[0]) > 0.0 && (currents[1] - currents[2]) > 0.0 && maxcurrent > spike_current)
+	{
+		BallsShot++;
 	}
 }

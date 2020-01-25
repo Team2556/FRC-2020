@@ -7,15 +7,34 @@
 
 #include "Feeder.h"
 
-Feeder::Feeder(Robot * pRobot) {
+Feeder::Feeder(Robot * pRobot) 
+{
     this->pRobot = pRobot;
 }
-//up function, down function
 
+void Feeder::IntakeMain()
+{
 
-//========================================================================================================
-//Function to spin balls to go up feeder
-//========================================================================================================
-void Feeder::GoUpManual(float power) {
-    pRobot->FeederMotor.Set(ControlMode::PercentOutput, power);
+    if (pRobot->DriverCMD.IntakeOut())
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    }
+    else
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    }
+
+    if(pRobot->DriverCMD.RunIntake())
+    {
+        pRobot->Intake_Motor.Set(-.5);
+    }
+    else if (pRobot->DriverCMD.ReverseIntake())
+    {
+        pRobot->Intake_Motor.Set(.75);
+    }
+    else
+    {
+        pRobot->Intake_Motor.Set(0);
+    }
+    
 }

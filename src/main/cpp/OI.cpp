@@ -11,23 +11,40 @@
 OI::OI() 
 {
     CurrDriveMode = DriveMode::Manual;
+    bIntakeOut = false;
     
 }
 
-
+bool OI::testBool()
+{
+    return false;
+}
 //==============================================================================
 //General
 //==============================================================================
 
 void OI::UpdateOI()
-{
+{/*
     if(Xbox1.GetBumper(frc::XboxController::kRightHand) && !Xbox1.GetBumper(frc::XboxController::kLeftHand))
     {
-        this->DriveGear = OI::TransmissionState::High;
+        DriveGear = OI::TransmissionState::High;
+        frc::SmartDashboard::PutString("Transmission State", "High");
     }
     else if(Xbox1.GetBumper(frc::XboxController::kLeftHand) && !Xbox1.GetBumper(frc::XboxController::kRightHand))
     {
-        this->DriveGear = OI::TransmissionState::Low;
+        DriveGear = OI::TransmissionState::Low;
+        frc::SmartDashboard::PutString("Transmission State", "Low");
+    }
+    */
+    if(Xbox1.GetTriggerAxis(frc::XboxController::kRightHand)> .5)
+    {
+        DriveGear = OI::TransmissionState::High;
+        frc::SmartDashboard::PutString("Transmission State", "High");
+    }
+    else 
+    {
+        DriveGear = OI::TransmissionState::Low;
+        frc::SmartDashboard::PutString("Transmission State", "Low");
     }
 }
 
@@ -37,7 +54,7 @@ void OI::UpdateOI()
     
 float OI::fMoveForward()
 {
-    return -Xbox1.GetY(frc::XboxController::kLeftHand);
+    return Xbox1.GetY(frc::XboxController::kLeftHand);
 }
 
 float OI::fStrafe()
@@ -48,7 +65,7 @@ float OI::fStrafe()
 
 float OI::fRotate()
 {
-    return Xbox1.GetX(frc::XboxController::kRightHand);
+    return -Xbox1.GetX(frc::XboxController::kRightHand);
 }
 
 
@@ -66,6 +83,30 @@ float OI::CPManualRotate()
     }
 }
 
+bool OI::IntakeOut()
+{
+    if(Xbox2.GetBButtonPressed())
+    {
+        bIntakeOut = !bIntakeOut;
+    }
+    return bIntakeOut;
+}
+
+bool OI::RunIntake()
+{
+    return Xbox2.GetAButton();
+}
+
+bool OI::ReverseIntake()
+{
+    return false;
+    
+    if(!Xbox2.GetAButton() && Xbox2.GetYButton())
+    {
+        return true;
+    }
+    
+}
 bool OI::CPRotate()
 {
     return Xbox2.GetBumper(frc::XboxController::kLeftHand);

@@ -15,6 +15,7 @@ class Drivebase {
   void Drive();
   void ManualDrive(float fForward, float fRotate);
   void AutomaticDrive(float fForward, float fRotate);
+  void AutoDrive(float fForward, float fRotate, OI::TransmissionState bTransmissionState);
 
   Robot * pRobot;
 
