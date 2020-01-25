@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -6,36 +7,35 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-#include "ControlPanel.h"
-#include "Feeder.h"
-#include "TeleopMain.h"
+
+#include "TeleopControl.h"
 #include "Auto.h"
 
 #include <iostream>
 
-
-
 #include "Drivebase.h"
 #include "Shooter.h"
+#include "ControlPanel.h"
 #include "Feeder.h"
 
 TeleopControl     * TeleopMain;
 Auto              * AutoControl;
 Drivebase         * WestDrive;
 Shooter           * pShooter;
-Feeder            * pFeeder;
 ControlPanel      * CtrlPanel;
+Feeder            * pFeeder;
 
 
 
 void Robot::RobotInit() 
 {
   WestDrive  = new Drivebase(this);
-  pFeeder = new Feeder(this);
-  pShooter = new Shooter(this, pFeeder);  
+  pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
-  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pFeeder);
+  pFeeder     = new Feeder(this);
+  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
   AutoControl = new Auto(this, WestDrive);
+  
 }
 
 
@@ -73,6 +73,8 @@ void Robot::TeleopPeriodic()
   //pShooter->ShooterMain();
   //WestDrive->Drive();
   //pShooter->TestShoot();
+  //pFeeder->IntakeMain();
+  frc::SmartDashboard::PutBoolean("Test", DriverCMD.ReverseIntake());
   TeleopMain->TeleopMain();
   //frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
 
@@ -83,7 +85,16 @@ void Robot::TestPeriodic()
   
 }
 
+void Robot::DisabledInit()
+{
 
+}
+
+void Robot::DisabledPeriodic()
+{
+
+}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+

@@ -41,7 +41,7 @@ class Robot : public frc::TimedRobot {
   PowerDistributionPanel    PDP{0};
   frc::Preferences       *  pPrefs;
 
-  WPI_TalonSRX    FeederMotor{CAN_FEEDER};
+  WPI_TalonSRX    FeederMotor{1};
 
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -49,6 +49,8 @@ class Robot : public frc::TimedRobot {
   void AutonomousPeriodic() override;
   void TeleopInit() override;
   void TeleopPeriodic() override;
+  void DisabledInit() override;
+  void DisabledPeriodic() override;
   void TestPeriodic() override;
 
   
@@ -71,6 +73,12 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                Turret_Motor{TURRET};
   WPI_TalonSRX                Intake_Motor{CAN_INTAKE};
 
+  WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
+
+  WPI_TalonSRX                ClimbingMotor{CLIMBMOTOR};
+  
+
+
 
 
   
@@ -80,7 +88,7 @@ class Robot : public frc::TimedRobot {
   frc::DifferentialDrive      WestCoastDrive{Left_Drive_Group, Right_Drive_Group};
   
  
-  OI                          DriverCMD{};
+  OI                          DriverCMD;
 
 
   frc::DoubleSolenoid         Transmission{CAN_PCM, TRANSMISSION_LOW, TRANSMISSION_HIGH};
@@ -93,6 +101,7 @@ class Robot : public frc::TimedRobot {
  //Test
 
 float encoderstart;
+bool  testBool = false;
 
 
 

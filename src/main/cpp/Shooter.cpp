@@ -7,10 +7,9 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(Robot * pRobot, Feeder * pFeeder) 
+Shooter::Shooter(Robot * pRobot) 
 {
     this->pRobot = pRobot;
-    this->pFeeder = pFeeder;
 
     pPIDOutput = new TurretPIDOutput(&fYawPIDValue);
     pYawPID    = new frc::PIDController(0.025, 0, .004, this, pPIDOutput);

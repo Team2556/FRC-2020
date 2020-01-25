@@ -9,17 +9,20 @@
 #include "Robot.h"
 #include "Drivebase.h"
 #include "ControlPanel.h"
+#include "Shooter.h"
 #include "Feeder.h"
 
 class TeleopControl {
  public:
-  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Feeder * pFeeder);
+  TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder);
 
    Robot           * pRobot;
-   Drivebase       * WestCoast;
+   Drivebase       * WestDrive;
    ControlPanel    * CtrlPanelObj;
-   Feeder * pFeeder;
+   Shooter         * pShooter;
+   Feeder          * pFeeder;
   
+  void TeleopInit();
   void TeleopMain();
 
 };

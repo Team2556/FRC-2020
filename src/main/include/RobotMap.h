@@ -16,6 +16,8 @@
 #define         TURRET                  9
 #define         CAN_FEEDER              10
 #define         CAN_INTAKE              11
+#define         CLIMBMOTOR              12
+#define         CPMOTOR                 13
 
 #define         CAN_PCM                 20
 

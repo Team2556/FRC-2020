@@ -21,6 +21,8 @@ class OI {
   float fRotate();
   float fStrafe(); //this is just for use when testing with mecanum
 
+  float fClimb();
+
   
 
   
@@ -35,14 +37,18 @@ class OI {
   bool IntakeOut();
   bool RunIntake();
   bool ReverseIntake();
-  float CPRotate();
 
   bool bIntakeOut;
+
+  bool CPRotate();
+  float CPManualRotate();
+  bool CPToColor();
 
   // Test commands
   bool      bTestButton(int iButton);
   float     fTestValue(int iControl);
 
+  bool  testBool();
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

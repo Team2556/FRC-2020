@@ -7,7 +7,6 @@
 
 #pragma once
 #include "Robot.h"
-#include "Feeder.h"
 #include "frc/WPILib.h"
 
 class TurretPIDOutput : public frc::PIDOutput
@@ -24,7 +23,7 @@ class TurretPIDOutput : public frc::PIDOutput
 class Shooter : frc::PIDSource
 {
  public:
-  Shooter(Robot * pRobot, Feeder * pFeeder);
+  Shooter(Robot * pRobot);
 
   void AutoShoot();
   void ShooterMain();
@@ -34,7 +33,6 @@ class Shooter : frc::PIDSource
   void TestShoot();
 
   Robot * pRobot; 
-  Feeder * pFeeder;
 
 
   float rampspeed;

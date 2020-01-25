@@ -7,4 +7,12 @@
 
 #include "Climber.h"
 
-Climber::Climber() {}
+Climber::Climber(Robot * pRobot) 
+{
+    this->pRobot = pRobot;
+}
+
+void Climber::climbUpDown(float i)
+{
+    pRobot->ClimbingMotor.Set(ControlMode::PercentOutput, i);
+}

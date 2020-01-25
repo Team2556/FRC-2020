@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -14,7 +15,10 @@ OI::OI()
     
 }
 
-
+bool OI::testBool()
+{
+    return false;
+}
 //==============================================================================
 //General
 //==============================================================================
@@ -67,7 +71,7 @@ float OI::fRotate()
 
 //==============================================================================
 
-float OI::CPRotate()
+float OI::CPManualRotate()
 {
     if(Xbox2.GetBButton())
     {
@@ -95,10 +99,40 @@ bool OI::RunIntake()
 
 bool OI::ReverseIntake()
 {
+    return false;
+    
     if(!Xbox2.GetAButton() && Xbox2.GetYButton())
-    return true;
+    {
+        return true;
+    }
+    
+}
+bool OI::CPRotate()
+{
+    return Xbox2.GetBumper(frc::XboxController::kLeftHand);
+}
+//==============================================================================
+
+float OI::fClimb()
+{
+    if(Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) < 0.1)
+    {
+        return Xbox2.GetTriggerAxis(frc::XboxController::kRightHand); 
+    } 
+    else if (Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) < 0.1)  
+    {
+        return Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
+bool OI::CPToColor()
+{
+    return Xbox2.GetBumper(frc::XboxController::kRightHand);
+}
 
 // ----------------------------------------------------------------------------
 // Test commands
@@ -157,7 +191,7 @@ bool OI::bTestButton(int iButton)
 
     return bButtonValue;
     }
-
+    
 
 // ----------------------------------------------------------------------------
 
@@ -168,10 +202,11 @@ float OI::fTestValue(int iControl)
     float   fControlValue;
 
     if ((iControl < 0) || (iControl > 5))
+    {
         return 0.0;
-
+    }
     switch (iControl)
-        {
+    {
         case 0 :
             fControlValue = Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
             break;
@@ -193,7 +228,7 @@ float OI::fTestValue(int iControl)
         default :
             fControlValue = 0.0;
             break;
-        }
+    }
 
     return fControlValue;
 }

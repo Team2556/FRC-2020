@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Auto.h"
+
 #include <frc/WPILib.h>
 
 Auto::Auto(Robot * pRobot, Drivebase  * WestDrive) 

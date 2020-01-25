@@ -60,11 +60,10 @@ void ControlPanel::Rotate(int spinNum) {
     //how many rotations have been completed
     int rotations = 0;
     bool newColor = false;
-    bool done = false;
     if(rotations < spinNum)
     {
         //Talon spins the control panel
-        CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
+        pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
         //Once the control panel is spun off of the init color, it is a new color
         if(ControlPanel::DetermineColor() != colorNumInit && newColor == false) newColor = true;
         
@@ -77,22 +76,35 @@ void ControlPanel::Rotate(int spinNum) {
         }
 
     }
-    else if(!done)
-    {
-        CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
-        char colorNeeded = ControlPanel::GetColorNeeded();
-        if(ControlPanel::DetermineColor() == colorNeeded) done = true;
-    }
-
+    
     frc::SmartDashboard::PutNumber("Rotations", rotations);
 
+}
+
+
+//===========================================================================================================
+//Rotates to the color returned from game data
+//===========================================================================================================
+void ControlPanel::RotateToColor()
+{
+    {
+        char colorNeeded = ControlPanel::GetColorNeeded();
+        if(ControlPanel::DetermineColor() == colorNeeded)
+        {
+            return;
+        }
+        else
+        {
+            pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
+        }
+    }
 }
 
 
 //this function is called from init when the B button is pressed
 void ControlPanel::ManualRotate(int i) {
     //rotate the control panel
-    CtrlPanelMotor.Set(ControlMode::PercentOutput,  i * 0.5);
+    pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput,  i * 0.5);
 
 }
 
