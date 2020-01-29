@@ -24,8 +24,10 @@ void Auto::AutoInit()
 
 void Auto::AutoPeriodic()
 {
-    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
+    WestDrive->AutoDrive((-46.9775 - pRobot->m_encoder.GetPosition())*.4, 0);
     frc::SmartDashboard::PutNumber("Encoder Position", CurrentAutoPosition());
+
+
 }
 
 

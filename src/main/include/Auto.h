@@ -27,4 +27,6 @@ class Auto {
   void AutoPeriodic();
   float CurrentAutoPosition();
 
+  float startPos;
+
 };
