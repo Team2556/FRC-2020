@@ -130,6 +130,10 @@ bool NavGyro::GetPresetTurning()
     }
 }
 
+float NavGyro::GetRoll() {
+    return pNavX->GetRoll();
+}
+
 bool NavGyro::GetPresetTurning(float AllowableError)
 {
     if(fabs(this->GetYawError())<AllowableError)
@@ -201,7 +205,7 @@ float  NavGyro::GetRotate(float fRotateMax)
     else
         {
         // Calculate drive train rotate command value
-        fRotateCmd = this->GetYawError() * 0.025; // .05 on comp bot -- Houston
+        fRotateCmd = this->GetYawError() * -0.05; // .05 on comp bot -- Houston
 
         // Make use rotate command doesn't exceed max limits
         if (fRotateCmd >  fRotateMax) fRotateCmd =  fRotateMax;

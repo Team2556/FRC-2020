@@ -25,4 +25,8 @@ class TeleopControl {
   void TeleopInit();
   void TeleopMain();
 
+  void TeleopDrive();
+
+  bool bAllowManualDrive;
+
 };

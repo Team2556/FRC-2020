@@ -23,16 +23,41 @@ void Shooter::AutoShoot()
 
 }
 
-void Shooter::ShooterMain()
+bool Shooter::ShooterMain()
 {
     Aim();
+	frc::SmartDashboard::PutNumber("Robot Distance", RobotDistance());
+	return false;
 }
+
+float Shooter::LimelightDistance()
+{
+	return pRobot->MagicVision.Height();
+}
+
+float Shooter::RobotDistance()
+{
+	return -2*LimelightDistance() + 60;
+}
+
 
 void Shooter::Aim()
 {
-	float value = fYawPIDValue;
-    pRobot->Turret_Motor.Set(value);
-    frc::SmartDashboard::PutNumber("PID Output",value);
+	if(pRobot->MagicVision.HasTarget())
+	{
+		float value = fYawPIDValue;
+		pRobot->Turret_Motor.Set(value);
+		frc::SmartDashboard::PutNumber("PID Output",value);
+		frc::SmartDashboard::PutBoolean("Has Target", true);
+	}
+	else
+	{
+		//return to forward
+		frc::SmartDashboard::PutBoolean("Has Target", false);
+		frc::SmartDashboard::PutNumber("PID Output",.5*pRobot->DriverCMD.fTestValue(6));
+		pRobot->Turret_Motor.Set(.5*pRobot->DriverCMD.fTestValue(6));
+	}
+	
 }
 
 double Shooter::PIDGet()

@@ -59,7 +59,11 @@ double Limelight::Ratio()
     return this->Width()/this->Height();
 }
 
-
+bool Limelight::HasTarget()
+{
+    float value = table->GetNumber("tv", 0);
+    return value > .5;
+}
 
 void Limelight::TopRow()
 {

@@ -60,7 +60,7 @@ public:
     float   GetYawError();
     float   GetTiltError();
     void    ResetTilt();
-		
+	float   GetRoll();
 //    float  CorrectRotate(float fRotateLess);
     float   GetTilt();
     float   GetRotate(float fRotateMax = 0.5);

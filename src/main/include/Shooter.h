@@ -26,8 +26,11 @@ class Shooter : frc::PIDSource
   Shooter(Robot * pRobot);
 
   void AutoShoot();
-  void ShooterMain();
+  bool ShooterMain();
   void Aim();
+  float LimelightDistance();
+  float RobotDistance();
+
   void CountBalls();
 
   void TestShoot();

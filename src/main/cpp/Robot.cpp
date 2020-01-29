@@ -35,6 +35,9 @@ void Robot::RobotInit()
   pFeeder     = new Feeder(this);
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
   AutoControl = new Auto(this, WestDrive);
+
+  //Ultra.SetAutomaticMode(true);
+  Nav.Init(false);
   
 }
 
@@ -47,18 +50,19 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  MotorControl_L1.GetEncoder().SetPosition(0);
+  // MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+  // MotorControl_L1.GetEncoder().SetPosition(0);
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
-  AutoControl->AutoMain();
+  // frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
+  // AutoControl->AutoMain();
 }
 
 void Robot::TeleopInit() 
 {
+  Nav.SetCommandYawToCurrent();
   pShooter->rampspeed = 0;
   //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
   //MotorControl_L1.GetEncoder().SetPosition(0);
@@ -69,15 +73,23 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
+  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
   //pShooter->ShooterMain();
   //WestDrive->Drive();
   //pShooter->TestShoot();
   //pFeeder->IntakeMain();
-  frc::SmartDashboard::PutBoolean("Test", DriverCMD.ReverseIntake());
+  //frc::SmartDashboard::PutBoolean("Test", DriverCMD.ReverseIntake());
   TeleopMain->TeleopMain();
   //frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
+  //frc::SmartDashboard::PutNumber("Raw Distance", LimelightUltra.RawRange());
+  frc::SmartDashboard::PutNumber("Angle", Nav.GetYaw());
+  frc::SmartDashboard::PutNumber("Command Angle", Nav.fGyroCommandYaw);
+  frc::SmartDashboard::PutNumber("Yaw Error", Nav.GetYawError());
+  frc::SmartDashboard::PutNumber("Gyro Rotate", Nav.GetRotate());
+  frc::SmartDashboard::PutNumber("Gyro YRotate", Nav.GetRoll());
+  //Turret_Motor.Set(DriverCMD.fTestValue(5));
 
+  
 }
 
 void Robot::TestPeriodic()

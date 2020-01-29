@@ -17,6 +17,6 @@ Auto::Auto(Robot * pRobot, Drivebase  * WestDrive)
 
 void Auto::AutoMain()
 {
-    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0, OI::TransmissionState::Low);
+    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
 
 }

@@ -8,18 +8,27 @@
 #pragma once
 
 #include "Robot.h"
+#include "Debug.h"
+
 
 class Drivebase {
  public:
   Drivebase(Robot * pRobot);
-  void Drive();
-  void ManualDrive(float fForward, float fRotate);
-  void AutomaticDrive(float fForward, float fRotate);
-  void AutoDrive(float fForward, float fRotate, OI::TransmissionState bTransmissionState);
+  void ManualDrive(bool GyroEnabled);
+  void AutoDrive(float fForward, float fRotate);
+  bool DriveDistance(float distance, bool reset, bool GyroEnabled = true);
+
+  void ManualTransmission();
+  void AutoTransmission(OI::TransmissionState bTransmissionState);
+
+  void test();
 
   Robot * pRobot;
 
   
+  Debug DrivebaseDebug{"Drivebase"};
 
+  bool bRotatePrevious = false;
+  int stopHoldCounter = 0;
 
 };
