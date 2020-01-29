@@ -63,6 +63,7 @@ public:
 		
 //    float  CorrectRotate(float fRotateLess);
     float   GetTilt();
+    float   GetRoll();
     float   GetRotate(float fRotateMax = 0.5);
 
     void    PIDEnable(bool bEnable);

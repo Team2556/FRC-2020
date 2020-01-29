@@ -1,4 +1,3 @@
-
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -12,11 +11,13 @@
 #include "Auto.h"
 
 #include <iostream>
-
+#include "NavGyro.h"
 #include "Drivebase.h"
 #include "Shooter.h"
 #include "ControlPanel.h"
 #include "Feeder.h"
+#include "Climber.h"
+
 
 TeleopControl     * TeleopMain;
 Auto              * AutoControl;
@@ -24,8 +25,7 @@ Drivebase         * WestDrive;
 Shooter           * pShooter;
 ControlPanel      * CtrlPanel;
 Feeder            * pFeeder;
-
-
+Climber           * pClimber;
 
 void Robot::RobotInit() 
 {
@@ -33,7 +33,7 @@ void Robot::RobotInit()
   pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
-  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
+  TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder, pClimber);
   AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
 }
 
@@ -63,8 +63,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 {
-  AutoControl->AutoPeriodic();
-  //TeleopMain->TeleopMain();
+  //AutoControl->AutoPeriodic();
+  TeleopMain->TeleopMain();
 }
 
 void Robot::TestPeriodic()
@@ -84,4 +84,3 @@ void Robot::DisabledPeriodic()
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
-

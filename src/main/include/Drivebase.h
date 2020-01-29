@@ -17,6 +17,10 @@ class Drivebase {
   void AutomaticDrive(float fForward, float fRotate);
   void AutoDrive(float fForward, float fRotate, OI::TransmissionState bTransmissionState);
 
+  void GyroDrive(float fForward, float fRotate);
+  bool bRotatePrevious = false;
+  int stopHoldCounter = 0;
+
   Robot * pRobot;
 
   

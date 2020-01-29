@@ -14,4 +14,5 @@ class Climber {
   Robot * pRobot;
 
   void climbUpDown(float i);
+  void rollClimber(float angle);
 };

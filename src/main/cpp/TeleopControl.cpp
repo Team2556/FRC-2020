@@ -9,13 +9,14 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder, Climber * pClimber) 
     {
         this->pRobot = pRobot;   
         this->WestDrive = WestDrive;
         this->CtrlPanelObj  = CtrlPanelObj;
         this->pShooter      = pShooter;
         this->pFeeder   = pFeeder;
+        this->pClimber      = pClimber;
     }
 
 void TeleopControl::TeleopInit()
@@ -26,12 +27,18 @@ void TeleopControl::TeleopInit()
 
 void TeleopControl::TeleopMain()
 {
-    pRobot->DriverCMD.UpdateOI();
-    pFeeder->IntakeMain();
+    //pRobot->DriverCMD.UpdateOI();
+    //pFeeder->IntakeMain();
     //pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
     //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
     //pShooter->ShooterMain();
-    WestDrive->Drive();
+    //WestDrive->Drive();
+
+    //Robot moves after the start button is pressed
+    if(pRobot->DriverCMD.BarRoll())
+    {
+        pClimber->rollClimber(pRobot->Nav.GetRoll());
+    }
     //pShooter->TestShoot();
 }
 

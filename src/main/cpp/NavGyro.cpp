@@ -213,6 +213,14 @@ float  NavGyro::GetRotate(float fRotateMax)
 
 
 //-----------------------------------------------------------------------------
+float NavGyro::GetRoll()
+{
+    #if defined(NAVX)
+    return pNavX->GetRoll();
+    #else
+        return 0.0;
+    #endif
+}
 
 float NavGyro::GetTilt()
 {

@@ -54,3 +54,65 @@ void Drivebase::AutoDrive(float fForward, float fRotate, OI::TransmissionState b
         }
     //}
 }
+
+void Drivebase::GyroDrive(float fForward, float fRotate) {
+    bool			bAllowRotate = false;
+
+    // Get joystick inputs
+    fForward = pRobot->DriverCMD.fMoveForward();
+    fRotate = pRobot->DriverCMD.fRotate();
+
+
+    // if(pRobot->DriverCMD.bManualRotate())
+    // {
+    //     bAllowRotate = true;
+    // }
+
+    if(fabs(pRobot->Nav.GetYawError())<10)
+    {
+    	pRobot->Nav.bPresetTurning = false;
+    }
+    else if(pRobot->Nav.bPresetTurning == true)
+    {
+        bAllowRotate = false;
+    }
+
+
+
+    if(bAllowRotate == true)
+    {
+        bRotatePrevious = true;
+    }
+
+    if((bAllowRotate == false) && (bRotatePrevious == true) && (stopHoldCounter < 5))
+    {
+        stopHoldCounter++;
+    }
+    else if((bAllowRotate == false) && (bRotatePrevious == true) && (stopHoldCounter >= 5))
+    {
+        stopHoldCounter = 0;
+        bRotatePrevious = false;
+    }
+
+
+    if (bRotatePrevious)
+	{
+        fRotate = pRobot->DriverCMD.fRotate();
+
+        if (fRotate >  0.0) fRotate -= 0.05;
+        if (fRotate <  0.0) fRotate += 0.05;
+        if (fRotate >  0.8) fRotate  =  0.8;
+        if (fRotate < -0.8) fRotate  = -0.8;
+
+        pRobot->Nav.SetCommandYawToCurrent();
+        frc::SmartDashboard::PutBoolean("Gryo Enabled", false);
+	}
+    else
+    {
+        // Calculate a rotation rate from robot angle error
+    	fRotate = pRobot->Nav.GetRotate();
+        frc::SmartDashboard::PutBoolean("Gryo Enabled", true);
+    }
+
+
+} // end GyroDrive

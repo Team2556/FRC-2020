@@ -134,6 +134,23 @@ bool OI::CPToColor()
     return Xbox2.GetBumper(frc::XboxController::kRightHand);
 }
 
+bool OI::BarRoll()
+{
+    if(Xbox2.GetStartButton())
+    {
+        moveOnBar++;
+    }
+    if(moveOnBar % 2 == 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    
+}
+
 // ----------------------------------------------------------------------------
 // Test commands
 // ----------------------------------------------------------------------------
