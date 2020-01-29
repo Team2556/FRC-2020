@@ -18,6 +18,7 @@
 #define         CAN_INTAKE              11
 #define         CLIMBMOTOR              12
 #define         CPMOTOR                 13
+#define         CLIMB_STRAFE            14 
 
 #define         CAN_PCM                 20
 

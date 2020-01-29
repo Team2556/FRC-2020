@@ -73,22 +73,7 @@ void Robot::TeleopPeriodic()
 {
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
-  //pShooter->ShooterMain();
-  //WestDrive->Drive();
-  //pShooter->TestShoot();
-  //pFeeder->IntakeMain();
-  //frc::SmartDashboard::PutBoolean("Test", DriverCMD.ReverseIntake());
-  TeleopMain->TeleopMain();
-  //frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
-  //frc::SmartDashboard::PutNumber("Raw Distance", LimelightUltra.RawRange());
-  frc::SmartDashboard::PutNumber("Angle", Nav.GetYaw());
-  frc::SmartDashboard::PutNumber("Command Angle", Nav.fGyroCommandYaw);
-  frc::SmartDashboard::PutNumber("Yaw Error", Nav.GetYawError());
-  frc::SmartDashboard::PutNumber("Gyro Rotate", Nav.GetRotate());
-  frc::SmartDashboard::PutNumber("Gyro YRotate", Nav.GetRoll());
-  //Turret_Motor.Set(DriverCMD.fTestValue(5));
-
-  
+  pShooter->ShooterMain(); 
 }
 
 void Robot::TestPeriodic()
