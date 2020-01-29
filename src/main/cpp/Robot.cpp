@@ -32,13 +32,15 @@ void Robot::RobotInit()
   WestDrive  = new Drivebase(this);
   pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
-  pFeeder     = new Feeder(this);
+  pFeeder = new Feeder(this);
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
-  AutoControl = new Auto(this, WestDrive);
 
   //Ultra.SetAutomaticMode(true);
-  Nav.Init(false);
   
+  AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
+
+  Nav.Init(false);
+
 }
 
 
@@ -50,14 +52,11 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  // MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  // MotorControl_L1.GetEncoder().SetPosition(0);
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  // frc::SmartDashboard::PutNumber("Encoder Pos", MotorControl_L1.GetEncoder().GetPosition());
-  // AutoControl->AutoMain();
+  
 }
 
 void Robot::TeleopInit() 
@@ -94,7 +93,6 @@ void Robot::TeleopPeriodic()
 
 void Robot::TestPeriodic()
 {
-  
 }
 
 void Robot::DisabledInit()

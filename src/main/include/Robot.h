@@ -31,7 +31,6 @@
 #include "OI.h"
 #include "NavGyro.h"
 #include "Limelight.h"
-#include "FilteredUltrasonic.h"
 
 
 
@@ -60,6 +59,9 @@ class Robot : public frc::TimedRobot {
   rev::CANSparkMax            MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+
+
+  rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
 
 
   WPI_TalonSRX          MotorControl_LF{1};
@@ -97,8 +99,6 @@ class Robot : public frc::TimedRobot {
   frc::DoubleSolenoid         Intake_Solenoid{CAN_PCM, INTAKE_OUT, INTAKE_IN};
 
   Limelight                   MagicVision;
-  FilteredUltrasonic          LimelightUltra;
-  //frc::Ultrasonic             Ultra{DIO_US_RANGE_TRIGGER, DIO_US_RANGE_PULSE, frc::Ultrasonic::DistanceUnit::kInches};
   NavGyro                     Nav;
 
   
