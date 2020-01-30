@@ -55,13 +55,17 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
   
-  rev::CANSparkMax            MotorControl_L1{LEFT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax            MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+  // rev::CANSparkMax            MotorControl_L1{LEFT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
+  // rev::CANSparkMax            MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
+  // rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
+  // rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
 
+  WPI_TalonSRX            MotorControl_L1{LEFT_DRIVE_1};
+  WPI_TalonSRX            MotorControl_L2{LEFT_DRIVE_2};
+  WPI_TalonSRX            MotorControl_R1{RIGHT_DRIVE_1};
+  WPI_TalonSRX            MotorControl_R2{RIGHT_DRIVE_2};
 
-  rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
+  //rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
 
 
   WPI_TalonSRX          MotorControl_LF{1};

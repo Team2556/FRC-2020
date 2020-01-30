@@ -13,7 +13,7 @@ class ControlPanel {
   ControlPanel(Robot * pRobot);
   Robot * pRobot;
   static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
-  //rev::ColorSensorV3    ColorSensor{i2cPort};
+  rev::ColorSensorV3    ColorSensor{i2cPort};
   
 
 
