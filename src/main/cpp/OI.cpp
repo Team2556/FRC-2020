@@ -46,6 +46,12 @@ void OI::UpdateOI()
         DriveGear = OI::TransmissionState::Low;
         frc::SmartDashboard::PutString("Transmission State", "Low");
     }
+
+    if(Xbox1.GetStartButtonPressed())
+    {
+        flipDrive = !flipDrive;
+    }
+    
 }
 
 //==============================================================================
@@ -68,6 +74,13 @@ float OI::fRotate()
     return -Xbox1.GetX(frc::XboxController::kRightHand);
 }
 
+bool OI::bManualRotate()
+{
+    if ((fRotate() > .2) || (fRotate() < -.2))
+        return true;
+    else
+        return false;
+}
 
 //==============================================================================
 
@@ -98,10 +111,12 @@ bool OI::RunIntake()
 }
 
 bool OI::ReverseIntake()
-{
-    return false;
-    
+{    
     if(!Xbox2.GetAButton() && Xbox2.GetYButton())
+    {
+        return true;
+    }
+    else
     {
         return true;
     }
@@ -136,7 +151,7 @@ bool OI::CPToColor()
 
 bool OI::BarRoll()
 {
-    if(Xbox2.GetStartButton())
+    if(Xbox1.GetStartButton())
     {
         moveOnBar++;
     }
@@ -160,10 +175,6 @@ bool OI::BarRoll()
 bool OI::bTestButton(int iButton)
     {
     bool    bButtonValue;
-
-    if ((iButton < 0) || (iButton > 5))
-        return false;
-
 #ifdef JOYSTICK
     switch (iButton)
         {
@@ -200,6 +211,9 @@ bool OI::bTestButton(int iButton)
         case 6:
             bButtonValue = Xbox1.GetAButton();
             break;
+        case 7:
+            bButtonValue = Xbox1.GetBButtonPressed();
+            break;
         default :
             bButtonValue = false;
             break;
@@ -217,11 +231,6 @@ bool OI::bTestButton(int iButton)
 float OI::fTestValue(int iControl)
 {
     float   fControlValue;
-
-    if ((iControl < 0) || (iControl > 5))
-    {
-        return 0.0;
-    }
     switch (iControl)
     {
         case 0 :
@@ -241,6 +250,9 @@ float OI::fTestValue(int iControl)
             break;
         case 5 :
             fControlValue = Xbox1.GetY(frc::XboxController::kLeftHand);
+            break;
+        case 6 :
+            fControlValue = Xbox2.GetX(frc::XboxController::kRightHand);
             break;
         default :
             fControlValue = 0.0;

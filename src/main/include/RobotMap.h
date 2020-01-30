@@ -11,13 +11,14 @@
 #define         RIGHT_DRIVE_1           4
 #define         RIGHT_DRIVE_2           5
 #define         RIGHT_DRIVE_3           6
-#define         SHOOTER_1               4
-#define         SHOOTER_2               2
+#define         SHOOTER_1               7
+#define         SHOOTER_2               8
 #define         TURRET                  9
 #define         CAN_FEEDER              10
 #define         CAN_INTAKE              11
 #define         CLIMBMOTOR              12
 #define         CPMOTOR                 13
+#define         CLIMB_STRAFE            14 
 
 #define         CAN_PCM                 20
 
@@ -27,3 +28,8 @@
 #define         TRANSMISSION_HIGH       1
 #define         INTAKE_OUT              2
 #define         INTAKE_IN               3
+
+
+//DIO Ports
+#define         DIO_US_RANGE_TRIGGER    0
+#define         DIO_US_RANGE_PULSE      1

@@ -5,30 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#pragma once
-
-#include "Robot.h"
 #include "Debug.h"
 
+Debug::Debug(std::string name) 
+{
+    table = nt::NetworkTableInstance::GetDefault().GetTable(name);
+}
 
-class Drivebase {
- public:
-  Drivebase(Robot * pRobot);
-  void ManualDrive(bool GyroEnabled);
-  void AutoDrive(float fForward, float fRotate);
-  bool DriveDistance(float distance, bool reset, bool GyroEnabled = true);
+void Debug::PutString(std::string key, std::string value)
+{
+    table->PutString(key, value);
+}
 
-  void ManualTransmission();
-  void AutoTransmission(OI::TransmissionState bTransmissionState);
-
-  void test();
-
-  Robot * pRobot;
-
-  
-  Debug DrivebaseDebug{"Drivebase"};
-
-  bool bRotatePrevious = false;
-  int stopHoldCounter = 0;
-
-};
+void Debug::PutNumber(std::string key, float value)
+{
+    table->PutNumber(key, value);
+}

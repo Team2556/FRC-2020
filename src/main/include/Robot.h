@@ -29,6 +29,7 @@
 
 #include "RobotMap.h"
 #include "OI.h"
+#include "NavGyro.h"
 #include "Limelight.h"
 
 
@@ -59,15 +60,16 @@ class Robot : public frc::TimedRobot {
   rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
 
+
   rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
 
-/*
+
   WPI_TalonSRX          MotorControl_LF{1};
   WPI_TalonSRX          MotorControl_RF{2};
   WPI_TalonSRX          MotorControl_LR{3};
   WPI_TalonSRX          MotorControl_RR{4};
   frc::MecanumDrive     RobotDrive{MotorControl_LF, MotorControl_LR, MotorControl_RF, MotorControl_RR};
-*/
+
   
 
   WPI_TalonSRX                Shooter_Motor_1{SHOOTER_1};
@@ -78,10 +80,7 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
 
   WPI_TalonSRX                ClimbingMotor{CLIMBMOTOR};
-  
-
-
-  NavGyro                     Nav;
+  WPI_TalonSRX                RollingMotor{CLIMB_STRAFE};
 
   
   frc::SpeedControllerGroup   Left_Drive_Group{MotorControl_L1, MotorControl_L2};
@@ -97,13 +96,13 @@ class Robot : public frc::TimedRobot {
   frc::DoubleSolenoid         Intake_Solenoid{CAN_PCM, INTAKE_OUT, INTAKE_IN};
 
   Limelight                   MagicVision;
+  NavGyro                     Nav;
 
   
 
  //Test
 
 float encoderstart;
-bool  testBool = false;
 
 
 

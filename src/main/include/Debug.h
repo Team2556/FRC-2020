@@ -6,25 +6,17 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
-#include "Robot.h"
-#include "ControlPanel.h"
-#include "Drivebase.h"
-#include "Shooter.h"
-#include "Feeder.h"
 
-class Auto {
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableInstance.h"
+
+class Debug {
  public:
-  Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter);
+  Debug(std::string name);
 
-   Robot           * pRobot;
-   Drivebase       * WestDrive;
-   ControlPanel    * CtrlPanelObj;
-   Shooter           * pShooter;
+  void PutString(std::string key, std::string value);
+  void PutNumber(std::string key, float value);
 
-  //float currentPosition = pRobot->m_encoder.GetPosition();
 
-  void AutoInit();
-  void AutoPeriodic();
-  float CurrentAutoPosition();
-
+  std::shared_ptr<NetworkTable> table;
 };

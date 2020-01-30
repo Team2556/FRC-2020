@@ -34,7 +34,13 @@ void Robot::RobotInit()
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder, pClimber);
+
+  //Ultra.SetAutomaticMode(true);
+  
   AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
+
+  Nav.Init(false);
+
 }
 
 
@@ -46,7 +52,6 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-
 }
 
 void Robot::AutonomousPeriodic() 
@@ -56,20 +61,24 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() 
 {
-  //AutoControl->AutoInit();
-  //pTeleop->TeleopInit();
+  Nav.SetCommandYawToCurrent();
+  pShooter->rampspeed = 0;
+  //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+  //MotorControl_L1.GetEncoder().SetPosition(0);
+  pShooter->BallsShot = 0;
 
 }
 
 void Robot::TeleopPeriodic() 
 {
-  //AutoControl->AutoPeriodic();
+  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
+  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
+  pShooter->ShooterMain(); 
   TeleopMain->TeleopMain();
 }
 
 void Robot::TestPeriodic()
 {
-  TeleopMain->TeleopTest();
 }
 
 void Robot::DisabledInit()

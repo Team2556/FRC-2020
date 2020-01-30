@@ -30,20 +30,42 @@ void TeleopControl::TeleopMain()
     //pRobot->DriverCMD.UpdateOI();
     //pFeeder->IntakeMain();
     //pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
-    //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
-    //pShooter->ShooterMain();
-    //WestDrive->Drive();
-
-    //Robot moves after the start button is pressed
-    if(pRobot->DriverCMD.BarRoll())
-    {
-        pClimber->rollClimber(pRobot->Nav.GetRoll());
-    }
-    //pShooter->TestShoot();
-}
-
-void TeleopControl::TeleopTest()
-{
-  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
+  if (!pShooter->ShooterMain())
+  {
+    //only drive if we arent actively shooting
+    TeleopDrive();
+  }
+
+  // if(pRobot->DriverCMD.BarRoll())
+  // {
+    frc::SmartDashboard::PutString("Test", "Works");
+        pClimber->rollClimber(pRobot->Nav.FindRoll());
+  // }
+
+  //pShooter->TestShoot();
 }
+
+void TeleopControl::TeleopDrive()
+{
+  static bool ResetDistance = false;
+  if(pRobot->DriverCMD.bTestButton(7))
+  {
+    bAllowManualDrive = false;
+    ResetDistance = true;
+  }
+
+  if(bAllowManualDrive)
+  {
+    WestDrive->ManualDrive(true);
+    WestDrive->ManualTransmission();
+  }
+  else
+  {
+    bAllowManualDrive = WestDrive->DriveDistance(10, ResetDistance);
+    ResetDistance = false;
+  }
+  
+  frc::SmartDashboard::PutBoolean("Manual Drive", bAllowManualDrive);
+}
+

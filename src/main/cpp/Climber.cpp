@@ -18,10 +18,18 @@ void Climber::climbUpDown(float i)
 }
 
 //=================================================================================================
-//Roll automatically once the robot climbs
+//Roll to a balanced point automatically once the robot climbs
 //=================================================================================================
 void Climber::rollClimber(float angle) 
 {
+    frc::SmartDashboard::PutNumber("Roll Value", angle);
+
+    //Set motors to power after it is manipulated
+    float power = 0;
+
+    //Balance to plus/minus this angle
+    const float balancePrecision = 5;
+
     //sets angle to range from -180 to 180 degrees
     if(angle > 180)
     {
@@ -29,13 +37,25 @@ void Climber::rollClimber(float angle)
     }
 
     //If shield generator is balanced dont frickin move
-    if(abs(angle) < 5)
+    if(abs(angle) <= balancePrecision)
     {
+        //pRobot->RollingMotor.Set(ControlMode::PercentOutput, power);
         return;
     }
 
-    //makes the robot roll at slower speeds as you approach balanced, ranges from 4/12 to 7/12 power
-    //pRobot->RollingMotor.Set(ControlMode::PercentOutput, angle/(angle + 10));
+    if(angle < 0)
+    {
+        //when the angle is -15 degrees, power is -1, when at balancePrecision degrees power is 0
+        power = (balancePrecision - 15)/(15 + balancePrecision) * (angle + balancePrecision)/(balancePrecision - angle);
+    }
+    else
+    {
+        //when the angle is 15 degrees, power is 1, when at balancePrecision degrees power is 0
+        power = (balancePrecision + 15)/(15 - balancePrecision) * (angle - balancePrecision)/(balancePrecision + angle);
+    }
 
-    frc::SmartDashboard::PutNumber("Roll Value", angle);
+    frc::SmartDashboard::PutNumber("Balance Precision", balancePrecision);
+    //makes the robot roll at slower speeds as you approach balanced, ranges from 0 to 1 power
+    //pRobot->RollingMotor.Set(ControlMode::PercentOutput, power);
+    frc::SmartDashboard::PutNumber("Climber Strafe Power", power);
 }

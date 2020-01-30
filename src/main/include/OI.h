@@ -20,6 +20,7 @@ class OI {
   float fMoveForward();
   float fRotate();
   float fStrafe(); //this is just for use when testing with mecanum
+  bool  bManualRotate();
 
   float fClimb();
 
@@ -31,6 +32,8 @@ class OI {
 
   TransmissionState       DriveGear;
   DriveMode               CurrDriveMode;
+
+  bool flipDrive = false;
 
 //CoDriver COmmands
 

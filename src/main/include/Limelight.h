@@ -28,6 +28,7 @@ class Limelight {
   double Height();
   double Angle();
   double Ratio();
+  bool HasTarget();
   void TopRow();
   void GetDrive(float * fForward, float *fStrafe, float * fRotate, bool * bFOD);
   double NewRatio();
