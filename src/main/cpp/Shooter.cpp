@@ -85,9 +85,10 @@ void Shooter::PIDEnable(bool bEnable)
 void Shooter::TestShoot()
 {	
 	frc::SmartDashboard::PutNumber("Encoder Velocity", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	if (pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() <= (-15000))
-	{
-		float maxvelocity = -26800;
+	frc::SmartDashboard::PutNumber("Encoder pos", pRobot->Shooter_Motor_1.GetSelectedSensorPosition());
+	// if (pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() <= (-15000))
+	// {
+		float maxvelocity = -2000;
 		static float speed = 0.0;
 		if (pRobot->DriverCMD.bTestButton(6))
 		{
@@ -95,22 +96,20 @@ void Shooter::TestShoot()
 		}
 		frc::SmartDashboard::PutNumber("Shooter Speed", speed);
 		frc::SmartDashboard::PutBoolean("Ramping", false);
-		pRobot->Shooter_Motor_1.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, maxvelocity*.95);
+		pRobot->Shooter_Motor_1.Set(ControlMode::PercentOutput, 1);
 		pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
 
 
 		
-	}
-	else 
-	{
-		pRobot->Shooter_Motor_1.Set(rampspeed);
-		pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
-		rampspeed -= .001;
-		frc::SmartDashboard::PutNumber("Ramp Speed", rampspeed);
-		frc::SmartDashboard::PutBoolean("Ramping", true);
-	}
-	CountBalls();
-	frc::SmartDashboard::PutNumber("Balls Shot", BallsShot);
+	// }
+	// else 
+	// {
+	// 	pRobot->Shooter_Motor_1.Set(rampspeed);
+	// 	pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
+	// 	rampspeed -= .001;
+	// 	frc::SmartDashboard::PutNumber("Ramp Speed", rampspeed);
+	// 	frc::SmartDashboard::PutBoolean("Ramping", true);
+	// }
 }
 
 bool comp(int a, int b) 

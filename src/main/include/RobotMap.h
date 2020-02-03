@@ -11,8 +11,8 @@
 #define         RIGHT_DRIVE_1           4
 #define         RIGHT_DRIVE_2           5
 #define         RIGHT_DRIVE_3           6
-#define         SHOOTER_1               7
-#define         SHOOTER_2               8
+#define         SHOOTER_1               4
+#define         SHOOTER_2               2
 #define         TURRET                  9
 #define         CAN_FEEDER              10
 #define         CAN_INTAKE              11

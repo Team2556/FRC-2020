@@ -77,11 +77,12 @@ void Drivebase::ManualDrive(bool GyroEnabled)
 void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
 {
 
+    
     if(GyroEnabled)
     {
         bool bAllowRotate = false;
 
-        if(fabs(fRotate)<.2)
+        if(fabs(fRotate)>.2)
         {
             bAllowRotate = true;
         }
@@ -105,7 +106,6 @@ void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
 
         if (bAllowRotate)
         {
-            fRotate = pRobot->DriverCMD.fRotate();
 
             if (fRotate >  0.0) fRotate -= 0.05;
             if (fRotate <  0.0) fRotate += 0.05;

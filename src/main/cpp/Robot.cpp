@@ -61,19 +61,23 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() 
 {
-  Nav.SetCommandYawToCurrent();
+  Shooter_Motor_1.SetSelectedSensorPosition(0);
+  //AutoControl->AutoInit();
+  //Nav.SetCommandYawToCurrent();
   pShooter->rampspeed = 0;
   //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
   //MotorControl_L1.GetEncoder().SetPosition(0);
-  pShooter->BallsShot = 0;
+  //pShooter->BallsShot = 0;
 
 }
 
 void Robot::TeleopPeriodic() 
 {
+  //AutoControl->AutoPeriodic();
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
-  pShooter->ShooterMain(); 
+  //pShooter->ShooterMain(); 
+  pShooter->TestShoot();
 }
 
 void Robot::TestPeriodic()
