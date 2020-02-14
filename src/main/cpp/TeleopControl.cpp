@@ -9,13 +9,14 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder, Climber * pClimber) 
     {
         this->pRobot = pRobot;   
         this->WestDrive = WestDrive;
         this->CtrlPanelObj  = CtrlPanelObj;
         this->pShooter      = pShooter;
         this->pFeeder   = pFeeder;
+        this->pClimber      = pClimber;
     }
 
 void TeleopControl::TeleopInit()

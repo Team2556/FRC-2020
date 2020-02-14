@@ -93,9 +93,6 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
 
   WPI_TalonSRX                ClimbingMotor{CLIMB_ROTATE_1};
-  
-
-
 
 
   #ifdef MECANUM_DRIVE

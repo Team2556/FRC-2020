@@ -62,6 +62,9 @@ class OI {
   bool CPToColor();
   
 
+  int moveOnBar = 0;
+  bool BarRoll();
+
   // Test commands
   bool      bTestButton(int iButton);
   float     fTestValue(int iControl);
