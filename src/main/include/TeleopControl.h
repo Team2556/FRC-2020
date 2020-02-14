@@ -28,6 +28,16 @@ class TeleopControl {
 
   void TeleopDrive();
 
+  void ManualMain();
+  bool autoBallPickup();
+  bool autoShoot();
+
   bool bAllowManualDrive;
+
+  enum AutomationStateEnum{Manual, BallPickup, Shoot};
+
+  int iState = 0;
+
+  AutomationStateEnum AutomationState;     
 
 };

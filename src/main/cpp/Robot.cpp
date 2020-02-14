@@ -30,9 +30,9 @@ Feeder            * pFeeder;
 void Robot::RobotInit() 
 {
   WestDrive  = new Drivebase(this);
-  pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
+  pShooter = new Shooter(this, pFeeder); 
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder);
 
   //Ultra.SetAutomaticMode(true);
@@ -40,13 +40,15 @@ void Robot::RobotInit()
   AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
 
   Nav.Init(false);
+  //Shooter_Motor_1.SetInverted(true);
+  //Shooter_Motor_2.SetInverted(true);
 
 }
 
 
 void Robot::RobotPeriodic() 
 {
-
+  
 }
 
 
@@ -72,8 +74,16 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
-  pShooter->ShooterMain(); 
+  //float fRotate = 0.0;
+  //pShooter->TestShoot();
+  //pShooter->ShooterMain(); 
+  //TeleopMain->TeleopMain();
+  pShooter->ShooterManual();
+  WestDrive->ManualDrive(true);
+  WestDrive->ManualTransmission();
+  CtrlPanel->ManualRotate(DriverCMD.CPManualRotate());
+  pFeeder->IntakeMain();
+  DriverCMD.UpdateOI();
 }
 
 void Robot::TestPeriodic()
