@@ -49,6 +49,7 @@ char ControlPanel::DetermineColor() {
         frc::SmartDashboard::PutString("Color", "Yellow");
         return 'Y';
     }
+    else return 'X';
 }
 
 

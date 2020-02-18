@@ -102,6 +102,8 @@ void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
             stopHoldCounter = 0;
             bRotatePrevious = false;
         }
+    if(pRobot->DriverCMD.CurrDriveMode == OI::DriveMode::Manual)
+    {
 
 
         if (bAllowRotate)
@@ -129,6 +131,7 @@ void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
     pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
         
     
+    }
 }
 
 void Drivebase::ManualTransmission()
@@ -161,11 +164,11 @@ void Drivebase::AutoTransmission(OI::TransmissionState bTransmissionState)
 
 bool Drivebase::DriveDistance(float distance, bool reset, bool GyroEnabled)
 {
-    static float startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
-    if(reset)
-    {
-        startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
-    }
+    // static float startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
+    // if(reset)
+    // {
+    //     startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
+    // }
 
     
     return true;

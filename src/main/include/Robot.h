@@ -25,7 +25,7 @@
 #include <frc/DriverStation.h>
 #include "rev/CANSparkMax.h"
 #include "ctre/Phoenix.h"
-
+#include "NavGyro.h"
 
 #include "RobotMap.h"
 #include "OI.h"
@@ -80,10 +80,7 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
 
   WPI_TalonSRX                ClimbingMotor{CLIMBMOTOR};
-  
-
-
-
+  WPI_TalonSRX                RollingMotor{CLIMB_STRAFE};
 
   
   frc::SpeedControllerGroup   Left_Drive_Group{MotorControl_L1, MotorControl_L2};

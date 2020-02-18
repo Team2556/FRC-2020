@@ -9,13 +9,14 @@
 
 
 
-TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder) 
+TeleopControl::TeleopControl(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, Shooter * pShooter, Feeder * pFeeder, Climber * pClimber) 
     {
         this->pRobot = pRobot;   
         this->WestDrive = WestDrive;
         this->CtrlPanelObj  = CtrlPanelObj;
         this->pShooter      = pShooter;
         this->pFeeder   = pFeeder;
+        this->pClimber      = pClimber;
     }
 
 void TeleopControl::TeleopInit()
@@ -26,8 +27,8 @@ void TeleopControl::TeleopInit()
 
 void TeleopControl::TeleopMain()
 {
-    pRobot->DriverCMD.UpdateOI();
-    pFeeder->IntakeMain();
+    //pRobot->DriverCMD.UpdateOI();
+    //pFeeder->IntakeMain();
     //pRobot->WestCoastDrive.ArcadeDrive(pRobot->DriverCMD.fMoveForward(), pRobot->DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), DriverCMD.fMoveForward(), DriverCMD.fRotate(), 0.0);
   if (!pShooter->ShooterMain())
@@ -35,7 +36,13 @@ void TeleopControl::TeleopMain()
     //only drive if we arent actively shooting
     TeleopDrive();
   }
-    
+
+  // if(pRobot->DriverCMD.BarRoll())
+  // {
+    frc::SmartDashboard::PutString("Test", "Works");
+        pClimber->rollClimber(pRobot->Nav.FindRoll());
+  // }
+
   //pShooter->TestShoot();
 }
 
