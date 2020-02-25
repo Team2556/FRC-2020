@@ -93,6 +93,8 @@ void NavGyro::UpdateValues()
 	int   UpdateRate = pNavX->GetRequestedUpdateRate();
 	bool  bMoving    = pNavX->IsMoving();
 	pNavX->UpdateDisplacement(fAccelX,fAccelY,UpdateRate,true);
+    NavDebug.PutNumber("Yaw", GetYaw());
+    NavDebug.PutNumber("Command Yaw", fGyroCommandYaw);
 }
 #endif
 

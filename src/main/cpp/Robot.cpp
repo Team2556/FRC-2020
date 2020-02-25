@@ -38,38 +38,44 @@ void Robot::RobotInit()
 
   //Ultra.SetAutomaticMode(true);
   
-  AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
+  AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter, TeleopMain, pFeeder);
 
   Nav.Init(false);
   //Shooter_Motor_1.SetInverted(true);
   //Shooter_Motor_2.SetInverted(true);
-
+  MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+  MotorControl_L1.GetEncoder().SetPosition(0);
 }
 
 
 void Robot::RobotPeriodic() 
 {
-  
+  ShooterDistance.IterativeDistance();
+  Nav.UpdateValues();
 }
 
 
 void Robot::AutonomousInit() 
 {
+  AutoControl->iCounter = 0;
+  AutoControl->iState = 0;
+  Nav.SetCommandYawToCurrent();
+
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  
+  AutoControl->Auto1();
 }
 
 void Robot::TeleopInit() 
 {
   Nav.SetCommandYawToCurrent();
   pShooter->rampspeed = 0;
-  //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  //MotorControl_L1.GetEncoder().SetPosition(0);
+  
   pShooter->BallsShot = 0;
-
+  TeleopMain->TeleopInit();  
+  pShooter->BallsShot = 0;
 }
 
 void Robot::TeleopPeriodic() 
@@ -78,13 +84,37 @@ void Robot::TeleopPeriodic()
   //float fRotate = 0.0;
   //pShooter->TestShoot();
   //pShooter->ShooterMain(); 
-  //TeleopMain->TeleopMain();
-  pShooter->ShooterManual();
-  WestDrive->ManualDrive(true);
-  WestDrive->ManualTransmission();
-  CtrlPanel->ManualRotate(DriverCMD.CPManualRotate());
-  pFeeder->IntakeMain();
+  TeleopMain->TeleopMain();
+  //static bool state = false;
   DriverCMD.UpdateOI();
+  SmartDashboard::PutNumber("Hood Angle", Hood_Motor.GetSelectedSensorPosition());
+  // float targetvalue = DriverCMD.fTestSelector(10);
+  // SmartDashboard::PutNumber("Target Hood Angle", targetvalue);
+
+  // if(DriverCMD.bTestButton(3))
+  // {
+  //   state = !state;
+  // }
+
+  // frc::SmartDashboard::PutBoolean("Auto Hood", state);
+  // if(state)
+  // {
+  //   Hood_Motor.Set(ControlMode::Position, targetvalue);
+    
+  // }
+  // else
+  // {
+  //   Hood_Motor.Set(DriverCMD.fManualHoodSpeed());
+  // }
+  // if(DriverCMD.AutoAim())
+	// {
+	// 	pShooter->Aim();
+	// }
+	// else
+	// {
+	// 	pShooter->AimManual();
+	// }
+  frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance);
 }
 
 void Robot::TestPeriodic()

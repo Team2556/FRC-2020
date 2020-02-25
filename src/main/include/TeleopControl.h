@@ -39,6 +39,7 @@ class TeleopControl {
   enum AutomationStateEnum{Manual, BallPickup, Shoot};
 
   int iState = 0;
+  int iBallsToShoot = 0;
 
   AutomationStateEnum AutomationState;     
 

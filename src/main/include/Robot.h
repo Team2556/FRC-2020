@@ -67,7 +67,7 @@ class Robot : public frc::TimedRobot {
 
   #endif
 
-  //rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
+  rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
 
 
   WPI_TalonSRX          MotorControl_LF{1};
@@ -93,6 +93,8 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
 
   WPI_TalonSRX                ClimbingMotor{CLIMB_ROTATE_1};
+  WPI_TalonSRX                WinchMotor{CLIMB_WINCH};
+  
 
 
   #ifdef MECANUM_DRIVE
@@ -113,6 +115,7 @@ class Robot : public frc::TimedRobot {
   frc::DoubleSolenoid         Transmission{CAN_PCM, TRANSMISSION_LOW, TRANSMISSION_HIGH};
   frc::DoubleSolenoid         Intake_Solenoid{CAN_PCM, INTAKE_OUT, INTAKE_IN};
   frc::DoubleSolenoid         Shooter_Solenoid{CAN_PCM, SHOOTER_CLOSED, SHOOTER_OPEN};
+  frc::DoubleSolenoid         Climb_Solenoid{CAN_PCM, CLIMB_UP, CLIMB_DOWN};
 
   Limelight                   MagicVision;
   NavGyro                     Nav;

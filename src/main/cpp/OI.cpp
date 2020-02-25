@@ -48,6 +48,10 @@ void OI::UpdateOI()
         flipDrive = !flipDrive;
     }
     
+    if(Xbox3.GetStartButtonPressed())
+    {
+        bLimeLightOff = !bLimeLightOff;
+    }
 }
 
 bool OI::BreakAuto()
@@ -98,7 +102,8 @@ bool OI::EndShoot()
 }
 float OI::CPManualRotate()
 {
-    if(Xbox2.GetBButton())
+    return 0.0;
+    if(Xbox2.GetXButton())
     {
         return 1.0;
     }
@@ -118,6 +123,7 @@ bool OI::IntakeOut()
 }
 
 bool OI::RunIntake()
+
 {
     return Xbox2.GetAButton();
 }
@@ -189,11 +195,16 @@ float OI::fTopFeederSpeed()
 float OI::fManualShootSpeed()
 {
     float speed = -Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
-    if (!Xbox2.GetBButton())
+    if (Xbox3.GetPOV() == 0)
     {
-        speed *= .9;
+        speedMult += .01;
     }
-    return speed;
+    else if (Xbox3.GetPOV() == 180)
+    {
+        speedMult -= .01;
+    }
+    frc::SmartDashboard::PutNumber("Speed Percent", speedMult);
+    return speed* speedMult;
 }
 
 float OI::fManualHoodSpeed()
@@ -203,7 +214,7 @@ float OI::fManualHoodSpeed()
 
 float OI::fManualTurretSpeed()
 {
-    return Xbox2.GetX(frc::XboxController::JoystickHand::kRightHand);
+    return -Xbox2.GetX(frc::XboxController::JoystickHand::kRightHand);
 }
 
 
@@ -214,20 +225,45 @@ bool OI::CPRotate()
 }
 //==============================================================================
 
-float OI::fClimb()
+bool OI::AutoAim()
 {
-    if(Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) < 0.1)
+    return Xbox2.GetStartButton();
+}
+float OI::fClimbSpeed()
+{
+    // if(Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) < 0.1)
+    // {
+    //     return Xbox2.GetTriggerAxis(frc::XboxController::kRightHand); 
+    // } 
+    // else if (Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) < 0.1)  
+    // {
+    //     return -Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand);
+    // }
+    // else
+    // {
+    //     return 0;
+    // }
+    if (Xbox1.GetPOV() == 0)
     {
-        return Xbox2.GetTriggerAxis(frc::XboxController::kRightHand); 
-    } 
-    else if (Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand) > 0.1 && Xbox2.GetTriggerAxis(frc::XboxController::kRightHand) < 0.1)  
-    {
-        return Xbox2.GetTriggerAxis(frc::XboxController::kLeftHand);
+        return -.75;
     }
-    else
+    else if (Xbox1.GetPOV() == 180)
+    {
+        return .75;
+    }
+    else 
     {
         return 0;
     }
+}
+
+bool OI::bClimbUp()
+{
+    if(Xbox2.GetBumperPressed(frc::XboxController::kLeftHand))
+    {
+        climbUp = !climbUp;
+    }
+    return climbUp;
 }
 
 bool OI::CPToColor()
@@ -300,6 +336,9 @@ bool OI::bTestButton(int iButton)
         case 7:
             bButtonValue = Xbox1.GetBButtonPressed();
             break;
+        case 8:
+            bButtonValue = Xbox3.GetAButtonPressed();
+            break;
         default :
             bButtonValue = false;
             break;
@@ -346,4 +385,19 @@ float OI::fTestValue(int iControl)
     }
 
     return fControlValue;
+}
+
+float OI::fTestSelector(float increment)
+{
+    static float fValue = 0;
+    if(Xbox2.GetPOV() == 0)
+    {
+        fValue += increment;
+    }
+    else if(Xbox2.GetPOV() == 180)
+    {
+        fValue -= increment;
+    }
+
+    return fValue;
 }

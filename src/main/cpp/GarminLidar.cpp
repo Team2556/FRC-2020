@@ -13,26 +13,38 @@ GarminLidar::GarminLidar()
 
 }
 
-float GarminLidar::distance()
+
+
+float GarminLidar::read()
 {
-    Lidar.Write(0x00, 0x04);
-    bool measuring = true;
-
-    uint8_t  data[1];
-    while (measuring)
-    {
-        
-        Lidar.Read(0x01, 1, data);
-        measuring = (data[0]%2) == 0;
-
-    }
     uint8_t  distance_data[2];
     Lidar.Read(0x10, 2, distance_data);
-    uint16_t truedistance;
-    truedistance = (distance_data[1]<<8) | (distance_data[0] & 16);
     frc::SmartDashboard::PutNumber("High Bit", distance_data[1]);
     frc::SmartDashboard::PutNumber("Low Bit", distance_data[0]);
+    uint16_t truedistance;
+    truedistance = (distance_data[1]<<8) | (distance_data[0]);
     return truedistance;
+}
+
+int GarminLidar::IterativeDistance()
+{
+    static int prevValue = -1;
+    // if(dioTrigger.Get())
+    // {
+    //     dioTrigger.Set(false);
+    // }
+
+    if(!dioMeasuring.Get())//this is when it is not measuring
+    {
+        prevValue = this->read();
+        dioTrigger.Set(!dioTrigger.Get());
+    }
+
+
+    this->distance = prevValue;
+    return prevValue;
+
+
 }
 
 bool GarminLidar::Connected()

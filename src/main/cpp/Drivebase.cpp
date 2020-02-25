@@ -136,6 +136,10 @@ void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
             frc::SmartDashboard::PutBoolean("Gryo Enabled", true);
         }
     }
+    else
+    {
+        pRobot->Nav.SetCommandYawToCurrent();
+    }
 
 
     #ifndef TANK_DRIVE

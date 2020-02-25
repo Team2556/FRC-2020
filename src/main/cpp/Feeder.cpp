@@ -53,3 +53,15 @@ void Feeder::BottomFeeder(float speed)
 {
     pRobot->Feeder_Low_Motor.Set(speed);
 }
+
+void Feeder::IntakeExtend(bool extended)
+{
+    if (extended)
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    }
+    else
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    }
+}
