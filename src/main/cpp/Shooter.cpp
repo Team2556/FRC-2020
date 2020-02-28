@@ -133,7 +133,7 @@ void Shooter::SpinUp()
 	pRobot->Shooter_Motor_1.Set(ControlMode::Velocity, speed);
 	pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
 	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	frc::SmartDashboard::PutNumber("Shoot Set Speed", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
+	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
 }
 
 float Shooter::SpinUpDistance(float distance, bool manual)
@@ -142,7 +142,11 @@ float Shooter::SpinUpDistance(float distance, bool manual)
 	{
 		distance = pRobot->ShooterDistance.distance;
 	}
-	float power = -(((.3/(16*38.48))*(distance-(8*30.48)))+.6);
+	float power = -(((.3/(16*30.48))*(distance-(8*30.48)))+.6);
+	if(power<-.85)
+	{
+		power = -.85;
+	}
 	frc::SmartDashboard::PutNumber("Shooter Power", power);
 
 	float speed =  power*33700;//max 33700 encoder 4930 rpm
@@ -160,6 +164,7 @@ float Shooter::SpinUpDistance(float distance, bool manual)
 	}
 
 	ShooterDebug.PutNumber("Velocity", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
+	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
 	return pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() - speed;
 	
 }
@@ -252,25 +257,32 @@ void CountBallsOld()
 	}
 }
 
+void CountBallsOld2()
+{
+	// static float Velocities[5] = {0, 0, 0, 0, 0};
+	// Velocities[0] = Velocities[1];
+	// Velocities[1] = Velocities[2];
+	// Velocities[2] = Velocities[3];
+	// Velocities[3] = Velocities[4];
+	// Velocities[4] = -pRobot->Shooter_Motor_1.GetSelectedSensorVelocity();
+
+	// float velDif = Velocities[2] - Velocities[0];
+	// if( (Velocities[2]-Velocities[0]) > 0 && (Velocities[4]-Velocities[2]) > 0.0 && velDif > 50)
+	// // && (Velocities[2]-Velocities[4]) > 0.0 
+	// //(Velocities[2]-Velocities[0]) > 0.0 &&
+	// {
+	// 	BallsShot++;
+	// }
+	// ShooterDebug.PutNumber("velDif", velDif);
+	// ShooterDebug.PutNumber("Balls Shot", BallsShot);
+}
+
+
 void Shooter::CountBalls()
 {
-	static float Velocities[5] = {0, 0, 0, 0, 0};
-	Velocities[0] = Velocities[1];
-	Velocities[1] = Velocities[2];
-	Velocities[2] = Velocities[3];
-	Velocities[3] = Velocities[4];
-	Velocities[4] = -pRobot->Shooter_Motor_1.GetSelectedSensorVelocity();
 
-	float velDif = Velocities[2] - Velocities[0];
-	if( (Velocities[2]-Velocities[0]) > 0 && (Velocities[4]-Velocities[2]) > 0.0 && velDif > 50)
-	// && (Velocities[2]-Velocities[4]) > 0.0 
-	//(Velocities[2]-Velocities[0]) > 0.0 &&
-	{
-		BallsShot++;
-	}
-	ShooterDebug.PutNumber("velDif", velDif);
-	ShooterDebug.PutNumber("Balls Shot", BallsShot);
 }
+
 
 void Shooter::ShooterManual()
 {
@@ -310,7 +322,7 @@ void Shooter::ShooterManual()
 		pRobot->Hood_Motor.Set(pRobot->DriverCMD.fManualHoodSpeed());
 	}
 	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	frc::SmartDashboard::PutNumber("Shoot Set Speed", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
+	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
 	frc::SmartDashboard::PutNumber("Velocity Error", pRobot->Shooter_Motor_1.GetClosedLoopError());
 	ShooterGate(pRobot->DriverCMD.bShooterOpen());
 	if(pRobot->DriverCMD.bLimeLightOff)

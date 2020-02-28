@@ -32,7 +32,7 @@ class TeleopControl {
 
   void ManualMain();
   bool autoBallPickup();
-  bool autoShoot();
+  bool autoShoot(bool intake = false);
 
   bool bAllowManualDrive;
 

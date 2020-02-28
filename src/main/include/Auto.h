@@ -30,10 +30,12 @@ class Auto {
   void AutoInit();
   void AutoPeriodic();
   float CurrentAutoPosition();
+  bool autoShoot(float distance, bool intake = false);
 
   void Auto1(); // far right side of field (from our perspective,) in line with our trench 3 ball
 
   int iState = 0; //track state in the state machine
+  int iShootState = 0;
   int iCounter = 0; // counter used in various actions that neet timing
   bool bStateDone = false; // used in some states if the return from an active function signals the end of a state 
 

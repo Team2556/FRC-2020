@@ -26,7 +26,7 @@ void Feeder::IntakeMain()
 
     if(pRobot->DriverCMD.RunIntake())
     {
-        pRobot->Intake_Motor.Set(-.5);
+        pRobot->Intake_Motor.Set(-.75);
     }
     else if (pRobot->DriverCMD.ReverseIntake())
     {

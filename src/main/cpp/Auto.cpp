@@ -21,7 +21,7 @@ Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, S
 
 void Auto::AutoInit()
 {
-    //pRobot->m_encoder.SetPosition(0);
+    pRobot->m_encoder.SetPosition(0);
 }
 
 void Auto::AutoPeriodic()
@@ -48,45 +48,52 @@ void Auto::Auto1()
     switch (iState)
     {
         case 0:
-            iState  = 30;
+            iState  = 10;
+            
             iCounter = 0;
-            TeleopMain->iState = 20;
+            iShootState = 20;
         break;
 
         case 10: // shoot preloaded balls
-            bStateDone = TeleopMain->autoShoot();
+            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance);
 
-            if (TeleopMain->iState == 50)
+            if (iShootState == 50)
             {
                 iCounter++;
             }
-            if(iCounter >= 125)
+            if(iCounter >= 50)
             {
-                TeleopMain->iState = 100;
+                iShootState = 100;
             }
             if (bStateDone)
             {
-                iState = 20;
+                iState = 30;
                 iCounter = 0;
+                pShooter->ShooterGate(false);
             }
         break;
         
         case 20:
-            fForward = -.7;
-            WestDrive->AutoDrive(fForward, 0.0);
+            fForward = -.65;
+            WestDrive->AutoDrive(fForward, 0.0, true);
             WestDrive->AutoTransmission(OI::TransmissionState::Low);
             pFeeder->IntakeExtend(false);
-            pFeeder->RunIntake(-.5);
-            pFeeder->BottomFeeder(.5);
+            pFeeder->RunIntake(-1);
+            pFeeder->BottomFeeder(.8);
             pFeeder->TopFeeder(-.5);
-            if(fabs(15-CurrentAutoPosition())< .1 )
+            pShooter->Aim();
+            pShooter->SpinUpDistance();
+            pShooter->AutoHood();
+            if(fabs(15.0-CurrentAutoPosition())< .1 )
             {
-                iState  = 100;
+                iState  = 40;
+                iCounter = 0;
+                iShootState = 20;
             }
         break;
 
         case 30:
-            fForward = -.6;
+            fForward = -.7;
 
             if(pRobot->PixyTable->GetBoolean("Ball Tracked", false))
             {
@@ -110,22 +117,212 @@ void Auto::Auto1()
             {
                 fRotate = 0.0;
             }
-
+            //shooter
+            pShooter->Aim();
+            pShooter->SpinUpDistance(850, false);
+            pShooter->AutoHood();
+            //drive
             WestDrive->AutoDrive(fForward, fRotate, bGyroEnabled);
             WestDrive->AutoTransmission(OI::TransmissionState::Low);
             pFeeder->IntakeExtend(false);
-            pFeeder->RunIntake(-.5);
-            pFeeder->BottomFeeder(.5);
+            pFeeder->RunIntake(-1);
+            pFeeder->BottomFeeder(.8);
             pFeeder->TopFeeder(-.5);
-            if(fabs(15-CurrentAutoPosition())< .1 )
+            if(fabs(15.0-CurrentAutoPosition())< .1 )
             {
-                iState  = 100;
+                iState  = 40;
+                iCounter = 0;
+                iShootState = 20;
             }
         break;
 
+        case 35:
+            pFeeder->RunIntake(0);
+            pFeeder->BottomFeeder(0);
+            pFeeder->TopFeeder(0);
+
+            iState = 40;
+            iCounter = 0;
+        break;
+        
+        case 37:
+
+        bStateDone = this->autoShoot(pRobot->ShooterDistance.distance);
+        pFeeder->RunIntake(-1);
+        pFeeder->BottomFeeder(.8);
+        pFeeder->TopFeeder(-.5);
+
+        iCounter++;
+
+        
+        if(iCounter>1);
+        {
+            iState = 40;
+            iCounter = 0;
+            pFeeder->RunIntake(0);
+            pFeeder->BottomFeeder(0);
+            pFeeder->TopFeeder(0);
+        }
+
+
+        break;
+
+        
+        case 40:
+            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance, true);
+
+        //     if (iShootState == 50)
+        //     {
+        //         iCounter++;
+        //     }
+        //     if(iCounter >= 30)
+        //     {
+        //         iShootState = 100;
+        //     }
+        //     if (bStateDone)
+        //     {
+        //         iState = 100;
+        //         iCounter = 0;
+        //     }
+        // break;
         case 100:
         default:
             WestDrive->AutoDrive(0.0, 0.0);
         break;
     }
+}
+
+
+
+
+
+
+
+bool Auto::autoShoot(float distance, bool intake)
+{
+  static int iShootCounter = 0;
+  float velocity_error;
+  frc::SmartDashboard::PutNumber("Shoot State", iShootState);
+  pShooter->CountBalls();
+  switch (iShootState)
+  {
+    case 10:
+      //This state rotates the robot towards the target
+      pRobot->Nav.SetCommandYaw(0);
+      WestDrive->AutoDrive(0, 0);
+      pShooter->ShooterDebug.PutNumber("Turret Position", pRobot->Turret_Motor.GetSelectedSensorPosition());
+      pShooter->ShooterDebug.PutNumber("Turret Home", pShooter->TurretHome);
+      //pShooter->GoTurretHome();
+      if (fabs(pRobot->Nav.GetYawError()) < 10 && fabs(pShooter->TurretHome - pRobot->Turret_Motor.GetSelectedSensorPosition()) < 100)
+      {
+        iShootState = 20;
+        iShootCounter = 0;
+      }
+      break;
+
+    case 20:
+      //ensure that the limelight has a target before moving onwards
+      if(pRobot->MagicVision.HasTarget())
+      {
+        iShootState = 30;
+        iShootCounter = 0;
+      }
+      //if there is no target, the limelight is given 1 second to aquire it
+      else if(iShootCounter > 5) //TODO make this a variable
+      {
+        return true;
+      }
+      else
+      {
+        iShootCounter++;
+      }
+      break;
+
+    case 30:
+      // prepare to shoot
+      pShooter->Aim();
+      velocity_error = pShooter->SpinUpDistance(distance, false);
+      pShooter->AutoHood();
+      pShooter->ShooterDebug.PutNumber("Velocity Error", velocity_error);
+
+      
+      if(fabs(pShooter->fYawPIDValue) < .05 && fabs(velocity_error) < 700 )
+      {
+        iShootCounter++;
+      }
+      else
+      {
+        iShootCounter = 0;
+      }
+      //wait until turret is stable for 2 iterations (40 milliseconds) before moving on 
+      if(iShootCounter > 2)
+      {
+        iShootState = 40;
+        iShootCounter = 0;
+      }
+      break;
+
+    case 40:
+      // open gate
+      pShooter->ShooterGate(true);
+      iShootState = 50;
+      pShooter->Aim();
+      pShooter->SpinUpDistance();
+      pShooter->AutoHood();
+      break;
+    
+    //Case 50/60 
+    //turn on and off the feeder in short increments to fire balls sequentually
+    case 50:
+      pFeeder->TopFeeder(-.7);
+      pFeeder->BottomFeeder(.8);
+      pFeeder->RunIntake(-intake);
+      iShootCounter++;
+      pShooter->Aim();
+      velocity_error = pShooter->SpinUpDistance(distance, false);
+      pShooter->AutoHood();
+      
+      
+      if(fabs(velocity_error) > 700)
+      {
+        iShootState = 30;
+        pFeeder->RunIntake(0);
+        pFeeder->BottomFeeder(.4);
+        pFeeder->TopFeeder(-.35);
+      }
+      break;
+
+    case 60:
+      pFeeder->TopFeeder(.5);
+      pFeeder->BottomFeeder(-.5);
+      pFeeder->RunIntake(-intake);
+      iShootCounter++;
+      pShooter->Aim();
+      pShooter->SpinUp();
+
+  
+      if(iShootCounter > 1)
+      {
+        iShootCounter = 0;
+        iShootState = 50;
+      }
+
+      if (pRobot->DriverCMD.EndShoot())
+      {
+        iShootCounter = 0;
+        iShootState = 100;
+      }
+      break;
+
+    default:
+    case 100:
+      pShooter->ShooterGate(false);
+      pShooter->StopShoot();
+      pFeeder->BottomFeeder(0);
+      pFeeder->TopFeeder(0);
+      pFeeder->RunIntake(0);
+      return true;
+      break;
+  }
+  return false;
 }

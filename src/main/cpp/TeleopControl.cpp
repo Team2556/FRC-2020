@@ -113,7 +113,7 @@ bool TeleopControl::autoBallPickup()
   return (pRobot->PixyTable->GetNumber("Time Since", 100) > 2);
 }
 
-bool TeleopControl::autoShoot()
+bool TeleopControl::autoShoot(bool intake)
 {
   static int iCounter = 0;
   float velocity_error;
@@ -159,6 +159,7 @@ bool TeleopControl::autoShoot()
       velocity_error = pShooter->SpinUpDistance(-1, false);
       pShooter->AutoHood();
       pShooter->ShooterDebug.PutNumber("Velocity Error", velocity_error);
+
       
       if(fabs(pShooter->fYawPIDValue) < .05 && fabs(velocity_error) < 700 )
       {
@@ -188,9 +189,9 @@ bool TeleopControl::autoShoot()
     //Case 50/60 
     //turn on and off the feeder in short increments to fire balls sequentually
     case 50:
-      pFeeder->TopFeeder(-.5);
-      pFeeder->BottomFeeder(.5);
-      pFeeder->RunIntake(0);
+      pFeeder->TopFeeder(-.7);
+      pFeeder->BottomFeeder(.8);
+      pFeeder->RunIntake(intake);
       iCounter++;
       pShooter->Aim();
       velocity_error = pShooter->SpinUpDistance();
@@ -208,13 +209,16 @@ bool TeleopControl::autoShoot()
       if(fabs(velocity_error) > 700)
       {
         iState = 30;
+        pFeeder->RunIntake(0);
+        pFeeder->BottomFeeder(.4);
+        pFeeder->TopFeeder(-.35);
       }
       break;
 
     case 60:
       pFeeder->TopFeeder(.5);
       pFeeder->BottomFeeder(-.5);
-      pFeeder->RunIntake(0);
+      pFeeder->RunIntake(intake);
       iCounter++;
       pShooter->Aim();
       pShooter->SpinUp();

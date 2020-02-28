@@ -60,12 +60,17 @@ void Robot::AutonomousInit()
   AutoControl->iCounter = 0;
   AutoControl->iState = 0;
   Nav.SetCommandYawToCurrent();
+  AutoControl->AutoInit();
 
 }
 
 void Robot::AutonomousPeriodic() 
 {
+  frc::SmartDashboard::PutNumber("Auto Time", 15 - frc::DriverStation::GetInstance().GetMatchTime());
+  frc::SmartDashboard::PutNumber("Distance Traveled", m_encoder.GetPosition());
+  frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance); 
   AutoControl->Auto1();
+  frc::SmartDashboard::PutNumber("Shoot Set Percent", Shooter_Motor_1.GetMotorOutputPercent());
 }
 
 void Robot::TeleopInit() 
