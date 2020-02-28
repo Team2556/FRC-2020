@@ -25,12 +25,15 @@
 #include <frc/DriverStation.h>
 #include "rev/CANSparkMax.h"
 #include "ctre/Phoenix.h"
-#include "NavGyro.h"
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableInstance.h"
+
 
 #include "RobotMap.h"
 #include "OI.h"
 #include "NavGyro.h"
 #include "Limelight.h"
+#include "GarminLidar.h"
 
 
 
@@ -54,12 +57,15 @@ class Robot : public frc::TimedRobot {
   void DisabledPeriodic() override;
   void TestPeriodic() override;
 
+
   
+  #ifndef MECANUM_DRIVE
   rev::CANSparkMax            MotorControl_L1{LEFT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_L2{LEFT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R1{RIGHT_DRIVE_1, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax            MotorControl_R2{RIGHT_DRIVE_2, rev::CANSparkMax::MotorType::kBrushless};
 
+  #endif
 
   rev::CANEncoder m_encoder = MotorControl_L1.GetEncoder();
 
@@ -74,17 +80,29 @@ class Robot : public frc::TimedRobot {
 
   WPI_TalonSRX                Shooter_Motor_1{SHOOTER_1};
   WPI_TalonSRX                Shooter_Motor_2{SHOOTER_2};
+  
+  
+  
   WPI_TalonSRX                Turret_Motor{TURRET};
+
   WPI_TalonSRX                Intake_Motor{CAN_INTAKE};
+  WPI_TalonSRX                Feeder_Low_Motor{FEEDER_LOW};
+  WPI_TalonSRX                Feeder_High_Motor{FEEDER_HIGH};
+  WPI_TalonSRX                Hood_Motor{HOOD_LINKAGE};
 
   WPI_TalonSRX                CtrlPanelMotor{CPMOTOR};
 
-  WPI_TalonSRX                ClimbingMotor{CLIMBMOTOR};
-  WPI_TalonSRX                RollingMotor{CLIMB_STRAFE};
+  WPI_TalonSRX                ClimbingMotor{CLIMB_ROTATE_1};
 
-  
+
+  #ifdef MECANUM_DRIVE
+  frc::SpeedControllerGroup   Left_Drive_Group{Shooter_Motor_1};//MotorControl_L1, MotorControl_L2};
+  frc::SpeedControllerGroup   Right_Drive_Group{Shooter_Motor_2};//MotorControl_R1, MotorControl_R2};
+  #else
   frc::SpeedControllerGroup   Left_Drive_Group{MotorControl_L1, MotorControl_L2};
   frc::SpeedControllerGroup   Right_Drive_Group{MotorControl_R1, MotorControl_R2};
+  #endif
+
 
   frc::DifferentialDrive      WestCoastDrive{Left_Drive_Group, Right_Drive_Group};
   
@@ -94,21 +112,27 @@ class Robot : public frc::TimedRobot {
 
   frc::DoubleSolenoid         Transmission{CAN_PCM, TRANSMISSION_LOW, TRANSMISSION_HIGH};
   frc::DoubleSolenoid         Intake_Solenoid{CAN_PCM, INTAKE_OUT, INTAKE_IN};
+  frc::DoubleSolenoid         Shooter_Solenoid{CAN_PCM, SHOOTER_CLOSED, SHOOTER_OPEN};
 
   Limelight                   MagicVision;
   NavGyro                     Nav;
+  GarminLidar                 ShooterDistance;
 
-  
+  std::shared_ptr<NetworkTable> PixyTable = nt::NetworkTableInstance::GetDefault().GetTable("Pixy");
 
  //Test
 
 float encoderstart;
 
+  frc::SendableChooser<std::string> AutoChooser;
+
+  const std::string AutoTeleop = "Teleop";
+  const std::string Auto1 = "Auto 1";
+  const std::string Auto2 = "Auto 2";
+  const std::string Auto3 = "Auto 3";
+  std::string AutoMode;
 
 
  private:
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::string m_autoSelected;
+  
 };

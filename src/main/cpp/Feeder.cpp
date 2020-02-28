@@ -38,3 +38,18 @@ void Feeder::IntakeMain()
     }
     
 }
+
+void Feeder::RunIntake(float speed)
+{
+    pRobot->Intake_Motor.Set(speed);
+}
+
+void Feeder::TopFeeder(float speed)
+{
+    pRobot->Feeder_High_Motor.Set(speed);
+}
+
+void Feeder::BottomFeeder(float speed)
+{
+    pRobot->Feeder_Low_Motor.Set(speed);
+}

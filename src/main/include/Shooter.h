@@ -7,7 +7,9 @@
 
 #pragma once
 #include "Robot.h"
+#include "Feeder.h"
 #include "frc/WPILib.h"
+#include "Debug.h"
 
 class TurretPIDOutput : public frc::PIDOutput
 {
@@ -23,23 +25,35 @@ class TurretPIDOutput : public frc::PIDOutput
 class Shooter : frc::PIDSource
 {
  public:
-  Shooter(Robot * pRobot);
+  Shooter(Robot * pRobot, Feeder * pFeeder);
 
   void AutoShoot();
   bool ShooterMain();
   void Aim();
+  void AutoHood(float distance = -1);
   float LimelightDistance();
   float RobotDistance();
+  void ShooterManual();
+
+  void SetTurretHome();
+  void GoTurretHome();
+  void AimManual();
+
+  void SpinUp();
 
   void CountBalls();
+
+  void ShooterGate(bool open);
 
   void TestShoot();
 
   Robot * pRobot; 
+  Feeder * pFeeder;
 
 
   float rampspeed;
   int BallsShot;
+  float TurretHome;
 
   //Stuff for pid controller
   TurretPIDOutput     * pPIDOutput;
@@ -47,5 +61,7 @@ class Shooter : frc::PIDSource
   float fYawPIDValue;
   void    PIDEnable(bool bEnable);
   double  PIDGet();
+
+  Debug   ShooterDebug{"Shooter"};
 };
 

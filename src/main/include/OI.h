@@ -16,9 +16,12 @@ class OI {
 
   //General Functions
   void UpdateOI();
+  bool BreakAuto();
 
   float fMoveForward();
   float fRotate();
+  float fTankLeft();
+  float fTankRight();
   float fStrafe(); //this is just for use when testing with mecanum
   bool  bManualRotate();
 
@@ -37,15 +40,27 @@ class OI {
 
 //CoDriver COmmands
 
+  bool Shoot();
+  bool EndShoot();
+
   bool IntakeOut();
   bool RunIntake();
   bool ReverseIntake();
+
+  bool bShooterOpen();
+  float fBottomFeederSpeed();
+  float fTopFeederSpeed();
+
+  float fManualShootSpeed();
+  float fManualHoodSpeed();
+  float fManualTurretSpeed();  
 
   bool bIntakeOut;
 
   bool CPRotate();
   float CPManualRotate();
   bool CPToColor();
+  
 
   int moveOnBar = 0;
   bool BarRoll();
@@ -54,7 +69,6 @@ class OI {
   bool      bTestButton(int iButton);
   float     fTestValue(int iControl);
 
-  bool  testBool();
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};

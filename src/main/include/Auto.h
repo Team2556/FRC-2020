@@ -21,11 +21,13 @@ class Auto {
    ControlPanel    * CtrlPanelObj;
    Shooter           * pShooter;
 
-  float CurrentAutoPosition = pRobot->m_encoder.GetPosition();
+  float currentPosition = 0;//pRobot->m_encoder.GetPosition();
+
+  int AutoNum;
 
   void AutoInit();
   void AutoPeriodic();
-  void AutoChooser(int i);
+  void AutoChooser();
   void AutoOne();
   void AutoTwo();
   void AutoThree();

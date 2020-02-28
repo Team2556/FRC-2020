@@ -30,9 +30,10 @@ Climber           * pClimber;
 void Robot::RobotInit() 
 {
   WestDrive  = new Drivebase(this);
-  pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
+  pShooter = new Shooter(this, pFeeder); 
+  pClimber = new Climber(this);
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder, pClimber);
 
   //Ultra.SetAutomaticMode(true);
@@ -40,23 +41,32 @@ void Robot::RobotInit()
   AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
 
   Nav.Init(false);
+  //Shooter_Motor_1.SetInverted(true);
+  //Shooter_Motor_2.SetInverted(true);
+
+
+    AutoChooser.AddOption(Auto1, Auto1);
+    AutoChooser.AddOption(Auto2, Auto2);
+    AutoChooser.AddOption(Auto3, Auto3);
+    frc::SmartDashboard::PutData("Auto Selector", &AutoChooser);
 
 }
 
 
 void Robot::RobotPeriodic() 
 {
-
+  
 }
 
 
 void Robot::AutonomousInit() 
 {
+  AutoControl->AutoInit();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  
+  AutoControl->AutoPeriodic();
 }
 
 void Robot::TeleopInit() 
@@ -75,11 +85,16 @@ void Robot::TeleopPeriodic()
 {
   //AutoControl->AutoPeriodic();
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
+  //float fRotate = 0.0;
+  //pShooter->TestShoot();
   //pShooter->ShooterMain(); 
-  pShooter->TestShoot();
-  pShooter->ShooterMain(); 
-  TeleopMain->TeleopMain();
+  //TeleopMain->TeleopMain();
+  pShooter->ShooterManual();
+  WestDrive->ManualDrive(true);
+  WestDrive->ManualTransmission();
+  CtrlPanel->ManualRotate(DriverCMD.CPManualRotate());
+  pFeeder->IntakeMain();
+  DriverCMD.UpdateOI();
 }
 
 void Robot::TestPeriodic()

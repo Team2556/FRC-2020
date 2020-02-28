@@ -67,22 +67,36 @@ void Drivebase::ManualDrive(bool GyroEnabled)
             frc::SmartDashboard::PutBoolean("Gryo Enabled", true);
         }
     }
+
+
+    #ifndef TANK_DRIVE
     if (pRobot->DriverCMD.flipDrive)
     {
         fForward = -fForward;
     }
     pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
+
+    #else
+    fForward = pRobot->DriverCMD.fTankLeft();
+    fRotate = pRobot->DriverCMD.fTankRight();
+    if (pRobot->DriverCMD.flipDrive)
+    {
+        fForward = -fForward;
+        fRotate = -fRotate;
+    }
+    pRobot->WestCoastDrive.TankDrive(fForward, fRotate);
+    #endif
 }
 
-void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
+
+void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
 {
 
-    
     if(GyroEnabled)
     {
         bool bAllowRotate = false;
 
-        if(fabs(fRotate)>.2)
+        if(fabs(fRotate) > .1)
         {
             bAllowRotate = true;
         }
@@ -102,19 +116,17 @@ void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
             stopHoldCounter = 0;
             bRotatePrevious = false;
         }
-    if(pRobot->DriverCMD.CurrDriveMode == OI::DriveMode::Manual)
-    {
 
 
-        if (bAllowRotate)
+        if (bRotatePrevious)
         {
+            fRotate = pRobot->DriverCMD.fRotate();
 
             if (fRotate >  0.0) fRotate -= 0.05;
             if (fRotate <  0.0) fRotate += 0.05;
             if (fRotate >  0.8) fRotate  =  0.8;
-            if (fRotate < -0.8) fRotate  = -0.8;
 
-            pRobot->Nav.SetCommandYawToCurrent();
+          pRobot->Nav.SetCommandYawToCurrent();
             frc::SmartDashboard::PutBoolean("Gryo Enabled", false);
         }
         else
@@ -131,7 +143,21 @@ void Drivebase::AutoDrive(float fForward, float fRotate, bool GyroEnabled)
     pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
         
     
+
+
+    #ifndef TANK_DRIVE
+    pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
+
+    #else
+    fForward = pRobot->DriverCMD.fTankLeft();
+    fRotate = pRobot->DriverCMD.fTankRight();
+    if (pRobot->DriverCMD.flipDrive)
+    {
+        fForward = -fForward;
+        fRotate = -fRotate;
     }
+    pRobot->WestCoastDrive.TankDrive(fForward, fRotate);
+    #endif
 }
 
 void Drivebase::ManualTransmission()
@@ -164,11 +190,11 @@ void Drivebase::AutoTransmission(OI::TransmissionState bTransmissionState)
 
 bool Drivebase::DriveDistance(float distance, bool reset, bool GyroEnabled)
 {
-    // static float startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
-    // if(reset)
-    // {
-    //     startDistance = pRobot->MotorControl_L1.GetEncoder().GetPosition();
-    // }
+    static float startDistance = 0;//pRobot->MotorControl_L1.GetEncoder().GetPosition();
+    if(reset)
+    {
+        startDistance = 0;//pRobot->MotorControl_L1.GetEncoder().GetPosition();
+    }
 
     
     return true;

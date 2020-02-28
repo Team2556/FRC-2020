@@ -17,36 +17,35 @@ Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, S
     this->pShooter      = pShooter;
 }
 
+
 void Auto::AutoInit()
 {
     pRobot->m_encoder.SetPosition(0);
+    pRobot->AutoMode = pRobot->AutoChooser.GetSelected();
+    pRobot->Nav.SetCommandYawToCurrent();
+}
+
+void Auto::AutoChooser()
+{
+    if(pRobot->AutoMode == pRobot->Auto1)
+    {
+        AutoOne();
+    }
+    else if(pRobot->AutoMode == pRobot->Auto2)
+    {
+        AutoTwo();
+    }
+    else if(pRobot->AutoMode == pRobot->Auto3)
+    {
+        AutoThree();
+    }
 }
 
 void Auto::AutoPeriodic()
 {
-    WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
-    frc::SmartDashboard::PutNumber("Encoder Position", CurrentAutoPosition);
-    int AutoNum = frc::SmartDashboard::GetNumber("Auto Number", 0);
-    AutoChooser(AutoNum);
-}
-
-void Auto::AutoChooser(int i)
-{
-    switch (i)
-    {
-    case 1:
-        AutoThree();
-    break;
-    case 2:
-        AutoTwo();
-    break;
-    case 3:
-        AutoThree();
-    break;
-    default:
-
-        break;
-    }
+    frc::SmartDashboard::PutString("Auto Version", pRobot->AutoChooser.GetSelected());
+    frc::SmartDashboard::PutNumber("Encoder Position", currentPosition);
+    AutoChooser();
 }
 
 void Auto::AutoOne()

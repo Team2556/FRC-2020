@@ -7,16 +7,14 @@
 
 #pragma once
 
-#include "Robot.h"
+#include "frc/I2C.h"
 
-class Feeder {
+class GarminLidar {
  public:
-  Feeder(Robot * pRobot);
+  GarminLidar();
 
-  Robot * pRobot;
+  frc::I2C   Lidar{frc::I2C::Port::kOnboard, 0x62};
 
-  void IntakeMain();
-  void RunIntake(float speed);
-  void BottomFeeder(float speed);
-  void TopFeeder(float speed);
+  float distance();
+  bool Connected();
 };

@@ -15,7 +15,7 @@ class Drivebase {
  public:
   Drivebase(Robot * pRobot);
   void ManualDrive(bool GyroEnabled);
-  void AutoDrive(float fForward, float fRotate, bool GyroEnabled = true);
+  void AutoDrive(float fForward, float fRotate,  bool GyroEnabled = true);
   bool DriveDistance(float distance, bool reset, bool GyroEnabled = true);
 
   void ManualTransmission();
