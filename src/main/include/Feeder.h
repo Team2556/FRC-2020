@@ -19,4 +19,5 @@ class Feeder {
   void RunIntake(float speed);
   void BottomFeeder(float speed);
   void TopFeeder(float speed);
+  void IntakeExtend(bool extended);
 };

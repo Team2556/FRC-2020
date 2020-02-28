@@ -59,3 +59,39 @@ void Climber::rollClimber(float angle)
     //pRobot->RollingMotor.Set(ControlMode::PercentOutput, power);
     frc::SmartDashboard::PutNumber("Climber Strafe Power", power);
 }
+
+
+void Climber::ClimbManual()
+{
+    //pistions
+    if(pRobot->Intake_Solenoid.Get() == frc::DoubleSolenoid::Value::kReverse)//TODO reverse this
+    {
+        frc::SmartDashboard::PutBoolean("Intake Out", true);
+        if(pRobot->DriverCMD.bClimbUp())
+        {
+            pRobot->Climb_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
+        }
+        else
+        {
+            pRobot->Climb_Solenoid.Set(frc::DoubleSolenoid::kReverse);
+        }
+    
+    }
+    else
+    {
+        frc::SmartDashboard::PutBoolean("Intake Out", false);
+    }
+
+
+    if(true)//pRobot->Climb_Solenoid.Get() == frc::DoubleSolenoid::Value::kForward && pRobot->Intake_Solenoid.Get() == frc::DoubleSolenoid::Value::kForward)
+    {
+        frc::SmartDashboard::PutBoolean("Climb Enabled", true);
+        frc::SmartDashboard::PutNumber("Climb Speed", pRobot->DriverCMD.fClimbSpeed());
+        pRobot->WinchMotor.Set(ControlMode::PercentOutput, pRobot->DriverCMD.fClimbSpeed());
+    }
+    else
+    {
+        pRobot->WinchMotor.Set(ControlMode::PercentOutput, 0);
+        frc::SmartDashboard::PutBoolean("Climb Enabled", false);
+    }
+}

@@ -2,6 +2,7 @@
 //Xbox Controllers
 #define         XBOX_ONE                0
 #define         XBOX_TWO                1
+#define         XBOX_THREE              2
 
 //CAN Bus
 
@@ -25,8 +26,7 @@
 
 #define         CLIMB_ROTATE_1           13
 #define         CLIMB_ROTATE_2           14
-#define         CLIMB_WINCH_1           15
-#define         CLIMB_WINCH_2           16
+#define         CLIMB_WINCH           15
 
 #define         CAN_PCM                 20
 
@@ -38,6 +38,8 @@
 #define         INTAKE_IN               3
 #define         SHOOTER_CLOSED          4
 #define         SHOOTER_OPEN            5
+#define         CLIMB_UP                6
+#define         CLIMB_DOWN              7
 
 
 //DIO Ports

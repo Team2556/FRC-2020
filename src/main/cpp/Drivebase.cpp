@@ -140,9 +140,12 @@ void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
     {
         fForward = -fForward;
     }
-    pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
         
     
+    else
+    {
+        pRobot->Nav.SetCommandYawToCurrent();
+    }
 
 
     #ifndef TANK_DRIVE

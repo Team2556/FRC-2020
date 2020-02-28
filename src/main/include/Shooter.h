@@ -40,6 +40,8 @@ class Shooter : frc::PIDSource
   void AimManual();
 
   void SpinUp();
+  float SpinUpDistance(float distance  = -1, bool manual = true);
+  void StopShoot();
 
   void CountBalls();
 

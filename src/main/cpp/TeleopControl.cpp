@@ -24,6 +24,14 @@ void TeleopControl::TeleopInit()
     pShooter->rampspeed = 0;
     AutomationState = AutomationStateEnum::Manual;
     pShooter->SetTurretHome();
+    //Nav.SetCommandYawToCurrent();
+    //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+    //MotorControl_L1.GetEncoder().SetPosition(0);   
+      pRobot->Shooter_Motor_1.SetSelectedSensorPosition(0);    
+
+  
+  pShooter->BallsShot = 0;
+    
 }
 
 
@@ -41,20 +49,67 @@ void TeleopControl::TeleopMain()
     BreakAuto = autoShoot();
     break;
   case AutomationStateEnum::Manual:
-  default:
     frc::SmartDashboard::PutString("Teleop State", "Manual");
     ManualMain();
+    break;
+  default:
+    frc::SmartDashboard::PutString("Teleop State", "Error");
     break;
   }
   if(BreakAuto || pRobot->DriverCMD.BreakAuto())
   {
     AutomationState = AutomationStateEnum::Manual;
-    iState = 0;
+    iState = 20;
   }
   if(pRobot->DriverCMD.bTestButton(2))
   {
     AutomationState = AutomationStateEnum::BallPickup;
   }
+  if(pRobot->DriverCMD.bTestButton(8))
+  {
+    frc::SmartDashboard::PutBoolean("Shoot start", true);
+    iBallsToShoot = frc::SmartDashboard::GetNumber("Balls To Shoot", 0);
+    AutomationState = AutomationStateEnum::Shoot;
+  }
+  else
+  {
+    frc::SmartDashboard::PutBoolean("Shoot start", false);
+  }
+
+  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
+  //float fRotate = 0.0;
+  //pShooter->TestShoot();
+  //pShooter->ShooterMain(); 
+  //static bool state = false;
+  pRobot->DriverCMD.UpdateOI();
+  SmartDashboard::PutNumber("Hood Angle", pRobot->Hood_Motor.GetSelectedSensorPosition());
+  // float targetvalue = DriverCMD.fTestSelector(10);
+  // SmartDashboard::PutNumber("Target Hood Angle", targetvalue);
+
+  // if(DriverCMD.bTestButton(3))
+  // {
+  //   state = !state;
+  // }
+
+  // frc::SmartDashboard::PutBoolean("Auto Hood", state);
+  // if(state)
+  // {
+  //   Hood_Motor.Set(ControlMode::Position, targetvalue);
+    
+  // }
+  // else
+  // {
+  //   Hood_Motor.Set(DriverCMD.fManualHoodSpeed());
+  // }
+  // if(DriverCMD.AutoAim())
+	// {
+	// 	pShooter->Aim();
+	// }
+	// else
+	// {
+	// 	pShooter->AimManual();
+	// }
+  frc::SmartDashboard::PutNumber("Distance", pRobot->ShooterDistance.distance);
 }
 
 void TeleopControl::TeleopDrive()
@@ -85,18 +140,27 @@ void TeleopControl::ManualMain()
   WestDrive->ManualDrive(true);
   WestDrive->ManualTransmission();
   pFeeder->IntakeMain();
+  pClimber->ClimbManual();
+  CtrlPanelObj->DetermineColor();
+  pShooter->ShooterManual();
+  CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPManualRotate());
+  pClimber->ClimbManual();
 }
 
 bool TeleopControl::autoBallPickup()
 {
-  WestDrive->AutoDrive(pRobot->DriverCMD.fMoveForward(), (pRobot->PixyTable->GetNumber("X", 2556) - 160)*-.005 + pRobot->DriverCMD.fRotate()*.25);
+  WestDrive->AutoDrive(pRobot->DriverCMD.fMoveForward(), (pRobot->PixyTable->GetNumber("X", 2556) - 160)*-.025 + pRobot->DriverCMD.fRotate()*.25, false);
   pFeeder->RunIntake(-.75);
-  return (pRobot->PixyTable->GetNumber("Time Since", 100) > 1);
+  pFeeder->BottomFeeder(.5);
+  return (pRobot->PixyTable->GetNumber("Time Since", 100) > 2);
 }
 
-bool TeleopControl::autoShoot()
+bool TeleopControl::autoShoot(bool intake)
 {
   static int iCounter = 0;
+  float velocity_error;
+  frc::SmartDashboard::PutNumber("Shoot State", iState);
+  pShooter->CountBalls();
   switch (iState)
   {
     case 10:
@@ -121,7 +185,7 @@ bool TeleopControl::autoShoot()
         iCounter = 0;
       }
       //if there is no target, the limelight is given 1 second to aquire it
-      else if(iCounter > 5) //TODO make this a constant
+      else if(iCounter > 5) //TODO make this a variable
       {
         return true;
       }
@@ -134,9 +198,12 @@ bool TeleopControl::autoShoot()
     case 30:
       // prepare to shoot
       pShooter->Aim();
-      pShooter->SpinUp();
+      velocity_error = pShooter->SpinUpDistance(-1, false);
+      pShooter->AutoHood();
+      pShooter->ShooterDebug.PutNumber("Velocity Error", velocity_error);
 
-      if(fabs(pShooter->fYawPIDValue) < .05)
+      
+      if(fabs(pShooter->fYawPIDValue) < .05 && fabs(velocity_error) < 700 )
       {
         iCounter++;
       }
@@ -144,7 +211,8 @@ bool TeleopControl::autoShoot()
       {
         iCounter = 0;
       }
-      if(iCounter > 5)
+      //wait until turret is stable for 2 iterations (40 milliseconds) before moving on 
+      if(iCounter > 2)
       {
         iState = 40;
         iCounter = 0;
@@ -152,44 +220,74 @@ bool TeleopControl::autoShoot()
       break;
 
     case 40:
+      // open gate
       pShooter->ShooterGate(true);
       iState = 50;
       pShooter->Aim();
-      pShooter->SpinUp();
+      pShooter->SpinUpDistance();
+      pShooter->AutoHood();
       break;
     
+    //Case 50/60 
+    //turn on and off the feeder in short increments to fire balls sequentually
     case 50:
-      pFeeder->TopFeeder(.25);
+      pFeeder->TopFeeder(-.7);
+      pFeeder->BottomFeeder(.8);
+      pFeeder->RunIntake(intake);
       iCounter++;
       pShooter->Aim();
-      pShooter->SpinUp();
-      if(iCounter > 2)
+      velocity_error = pShooter->SpinUpDistance();
+      pShooter->AutoHood();
+      // if(iBallsToShoot - pShooter->BallsShot <= 0)
+      // {
+      //   iCounter = 0;
+      //   iState = 100;
+      // }
+      if(pRobot->DriverCMD.EndShoot())
       {
         iCounter = 0;
-        iState = 60;
+        iState = 100;
+      }
+      if(fabs(velocity_error) > 700)
+      {
+        iState = 30;
+        pFeeder->RunIntake(0);
+        pFeeder->BottomFeeder(.4);
+        pFeeder->TopFeeder(-.35);
       }
       break;
+
     case 60:
-      pFeeder->TopFeeder(0);
+      pFeeder->TopFeeder(.5);
+      pFeeder->BottomFeeder(-.5);
+      pFeeder->RunIntake(intake);
       iCounter++;
       pShooter->Aim();
       pShooter->SpinUp();
 
-      if (pRobot->DriverCMD.EndShoot())
-      {
-        pShooter->ShooterGate(false);
-        return true;
-      }
-      if(iCounter > 3)
+  
+      if(iCounter > 1)
       {
         iCounter = 0;
         iState = 50;
       }
+
+      if (pRobot->DriverCMD.EndShoot())
+      {
+        iCounter = 0;
+        iState = 100;
+      }
       break;
 
     default:
+    case 100:
+      pShooter->ShooterGate(false);
+      pShooter->StopShoot();
+      pFeeder->BottomFeeder(0);
+      pFeeder->TopFeeder(0);
+      pFeeder->RunIntake(0);
       return true;
       break;
   }
-  return true;
+  return false;
 }

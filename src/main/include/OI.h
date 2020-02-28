@@ -18,6 +18,8 @@ class OI {
   void UpdateOI();
   bool BreakAuto();
 
+
+  //Driver Commands
   float fMoveForward();
   float fRotate();
   float fTankLeft();
@@ -25,7 +27,6 @@ class OI {
   float fStrafe(); //this is just for use when testing with mecanum
   bool  bManualRotate();
 
-  float fClimb();
 
   
 
@@ -43,34 +44,47 @@ class OI {
   bool Shoot();
   bool EndShoot();
 
+//intake
   bool IntakeOut();
   bool RunIntake();
   bool ReverseIntake();
+  bool bIntakeOut;
+  bool bLimeLightOff = false;
 
-  bool bShooterOpen();
+//feeder
   float fBottomFeederSpeed();
   float fTopFeederSpeed();
+  float speedMult = .9;
 
+//shooter
+  bool bShooterOpen();
+  bool AutoAim();
   float fManualShootSpeed();
   float fManualHoodSpeed();
   float fManualTurretSpeed();  
 
-  bool bIntakeOut;
 
+  //control pannel
   bool CPRotate();
   float CPManualRotate();
   bool CPToColor();
   
-
+  //climb
   int moveOnBar = 0;
   bool BarRoll();
+  float fClimbSpeed();
+  bool bClimbUp();
+  bool climbUp = false;
 
   // Test commands
   bool      bTestButton(int iButton);
   float     fTestValue(int iControl);
 
+  float     fTestSelector(float increment = .1);
+
 
   protected:
     frc::XboxController   Xbox1{XBOX_ONE};
     frc::XboxController   Xbox2{XBOX_TWO};
+    frc::XboxController   Xbox3{XBOX_THREE};
 };

@@ -26,7 +26,7 @@ void Feeder::IntakeMain()
 
     if(pRobot->DriverCMD.RunIntake())
     {
-        pRobot->Intake_Motor.Set(-.5);
+        pRobot->Intake_Motor.Set(-.75);
     }
     else if (pRobot->DriverCMD.ReverseIntake())
     {
@@ -52,4 +52,16 @@ void Feeder::TopFeeder(float speed)
 void Feeder::BottomFeeder(float speed)
 {
     pRobot->Feeder_Low_Motor.Set(speed);
+}
+
+void Feeder::IntakeExtend(bool extended)
+{
+    if (extended)
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    }
+    else
+    {
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    }
 }
