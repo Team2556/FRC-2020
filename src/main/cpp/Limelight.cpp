@@ -51,6 +51,7 @@ double Limelight::Height()
 double Limelight::Angle()
 {
     double angleconst = frc::SmartDashboard::GetNumber("Angle Constant", 0.0);
+    frc::SmartDashboard::PutNumber("Angle Constant", angleconst);
     return (this->Width()/this->Height())*angleconst;
 }
 
@@ -154,4 +155,25 @@ double Limelight::NewRatio()
 
 
     return ratio;
+}
+
+
+float Limelight::GetDistanceToTarget() 
+{
+    const float targetWidth = 21.3205;
+    float height = Height() / 240;
+    float width =  Width() / 320;
+
+    float distanceByHeight = height / tan(Angle());
+    float leg1 = sqrt((targetWidth * targetWidth) - (width * width));
+    float leg2 = sqrt((distanceByHeight * distanceByHeight) - (width * width));
+    float distanceToOppSide = leg1 + leg2;
+
+    float term1 = distanceToOppSide * distanceToOppSide;
+    float term2 = (targetWidth * targetWidth)/4;
+    float term3 = targetWidth * distanceToOppSide;
+    float term4 = sqrt(1-((width/targetWidth) * width/targetWidth));
+
+    float trueDistance = sqrt(term1 + term2 - (term3 * term4));
+    return trueDistance;
 }

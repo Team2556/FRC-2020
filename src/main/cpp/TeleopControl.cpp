@@ -37,11 +37,16 @@ void TeleopControl::TeleopMain()
     TeleopDrive();
   }
 
+  if(pRobot->DriverCMD.CPManualRotate() == 1) {
+    CtrlPanelObj->ManualRotate(1);
+  }
   // if(pRobot->DriverCMD.BarRoll())
   // {
     frc::SmartDashboard::PutString("Test", "Works");
-        pClimber->rollClimber(pRobot->Nav.FindRoll());
+        //pClimber->rollClimber(pRobot->Nav.FindRoll());
   // }
+
+    frc::SmartDashboard::PutNumber("Limelight Distance", pRobot->MagicVision.GetDistanceToTarget());
 
   //pShooter->TestShoot();
 }

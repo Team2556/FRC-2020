@@ -53,20 +53,32 @@ char ControlPanel::DetermineColor() {
 }
 
 
-void ControlPanel::Rotate(int spinNum) {
+
+//====================================================================================================================
+//Rotate
+//====================================================================================================================
+//returns false until the panel is rotated to spinNum rotations
+bool ControlPanel::Rotate(int spinNum) {
+
+    if(!ServoDown()) {
+        ServoDown();
+        return false;
+    }
+
+    frc::SmartDashboard::PutNumber("Rotations", rotations);
+
     //sets colorNum as a one letter string representing the first letter of red, green, blue, and yellow
-    const char colorNumInit = ControlPanel::DetermineColor();
-    //basically calling DetermineColor() but more optimized
+    static char colorNumInit = DetermineColor();
+    //basically calling DetermineColor() but cooler
     char colorNum = colorNumInit;
     //how many rotations have been completed
-    int rotations = 0;
     bool newColor = false;
     if(rotations < spinNum)
     {
         //Talon spins the control panel
         pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
         //Once the control panel is spun off of the init color, it is a new color
-        if(ControlPanel::DetermineColor() != colorNumInit && newColor == false) newColor = true;
+        if(DetermineColor() != colorNumInit && newColor == false) newColor = true;
         
         if(colorNumInit == colorNum && newColor)
         {
@@ -77,28 +89,47 @@ void ControlPanel::Rotate(int spinNum) {
         }
 
     }
-    
-    frc::SmartDashboard::PutNumber("Rotations", rotations);
+    else {
+        rotations = 0;
+        ServoUp();
+        return true;
+    }
 
+    return false;
 }
 
 
 //===========================================================================================================
 //Rotates to the color returned from game data
 //===========================================================================================================
-void ControlPanel::RotateToColor()
+bool ControlPanel::RotateToColor(char givenColor)
 {
-    {
-        char colorNeeded = ControlPanel::GetColorNeeded();
-        if(ControlPanel::DetermineColor() == colorNeeded)
-        {
-            return;
-        }
-        else
-        {
-            pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
-        }
+    if(!ServoDown()) {
+        ServoDown();
+        return false;
     }
+
+    char colorNeeded = givenColor;
+    try
+    {
+        colorNeeded = GetColorNeeded();
+        frc::SmartDashboard::PutString("GameData", "Rotating to " + colorNeeded);
+    }
+    catch(std::exception) 
+    {
+        frc::SmartDashboard::PutString("GameData", "No GameData Color");
+    }
+
+    if(DetermineColor() == colorNeeded)
+    {
+        ServoUp();
+        return true;
+    }
+    else
+    {
+        pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.5);
+    }
+    return false;
 }
 
 
@@ -116,4 +147,26 @@ char ControlPanel::GetColorNeeded() {
     std::string gameData;
     gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
     return gameData[0];
+}
+
+
+//Set the servo to either up or down on function call, becomes true once the servo is at desired position
+bool ControlPanel::ServoUp() {
+    pRobot->CtrlServo.SetAngle(0);
+    if(pRobot->CtrlServo.GetAngle() == 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool ControlPanel::ServoDown() {
+    pRobot->CtrlServo.SetAngle(90);
+    if(pRobot->CtrlServo.GetAngle() == 90) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }

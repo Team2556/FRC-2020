@@ -73,7 +73,7 @@ void Robot::TeleopPeriodic()
 {
   //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
   //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
-  pShooter->ShooterMain(); 
+  //pShooter->ShooterMain(); 
   TeleopMain->TeleopMain();
 }
 

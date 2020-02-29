@@ -32,7 +32,7 @@ class Limelight {
   void TopRow();
   void GetDrive(float * fForward, float *fStrafe, float * fRotate, bool * bFOD);
   double NewRatio();
-  
+  float GetDistanceToTarget();
 
 
   double results[4][2] = {{1,2}, {3,4}, {1,2}, {3,4}};
