@@ -2,23 +2,31 @@
 //Xbox Controllers
 #define         XBOX_ONE                0
 #define         XBOX_TWO                1
+#define         XBOX_THREE              2
 
 //CAN Bus
 
 #define         LEFT_DRIVE_1            1
 #define         LEFT_DRIVE_2            2
-#define         LEFT_DRIVE_3            3
-#define         RIGHT_DRIVE_1           4
-#define         RIGHT_DRIVE_2           5
-#define         RIGHT_DRIVE_3           6
-#define         SHOOTER_1               7
-#define         SHOOTER_2               8
-#define         TURRET                  9
-#define         CAN_FEEDER              10
+#define         RIGHT_DRIVE_1           3
+#define         RIGHT_DRIVE_2           4
+
+#define         SHOOTER_1               5
+#define         SHOOTER_2               6
+
+#define         TURRET                  7
+#define         HOOD_LINKAGE            8
+
+#define         FEEDER_HIGH             9
+#define         FEEDER_LOW              10
+
 #define         CAN_INTAKE              11
-#define         CLIMBMOTOR              12
-#define         CPMOTOR                 13
-#define         CLIMB_STRAFE            14 
+
+#define         CPMOTOR                 12
+
+#define         CLIMB_ROTATE_1           13
+#define         CLIMB_ROTATE_2           14
+#define         CLIMB_WINCH           15
 
 #define         CAN_PCM                 20
 
@@ -28,8 +36,13 @@
 #define         TRANSMISSION_HIGH       1
 #define         INTAKE_OUT              2
 #define         INTAKE_IN               3
-
+#define         SHOOTER_CLOSED          4
+#define         SHOOTER_OPEN            5
+#define         CLIMB_UP                6
+#define         CLIMB_DOWN              7
 
 //DIO Ports
 #define         DIO_US_RANGE_TRIGGER    0
 #define         DIO_US_RANGE_PULSE      1
+
+#define         CPSERVO                 0

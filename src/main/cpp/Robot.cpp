@@ -30,51 +30,62 @@ Climber           * pClimber;
 void Robot::RobotInit() 
 {
   WestDrive  = new Drivebase(this);
-  pShooter = new Shooter(this);  
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
+  pShooter = new Shooter(this, pFeeder); 
+  pClimber = new Climber(this);
   TeleopMain  = new TeleopControl(this, WestDrive, CtrlPanel, pShooter, pFeeder, pClimber);
 
   //Ultra.SetAutomaticMode(true);
   
-  AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter);
+  AutoControl = new Auto(this, WestDrive, CtrlPanel, pShooter, TeleopMain, pFeeder);
 
   Nav.Init(false);
+  //Shooter_Motor_1.SetInverted(true);
+  //Shooter_Motor_2.SetInverted(true);
 
+
+    AutoChooser.AddOption(Auto1, Auto1);
+    AutoChooser.AddOption(Auto2, Auto2);
+    AutoChooser.AddOption(Auto3, Auto3);
+    frc::SmartDashboard::PutData("Auto Selector", &AutoChooser);
+
+  MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+  MotorControl_L1.GetEncoder().SetPosition(0);
 }
 
 
 void Robot::RobotPeriodic() 
 {
-
+  ShooterDistance.IterativeDistance();
+  Nav.UpdateValues();
 }
 
 
 void Robot::AutonomousInit() 
 {
+  AutoControl->AutoInit();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  
+  AutoControl->AutoPeriodic();
 }
 
 void Robot::TeleopInit() 
 {
-  Nav.SetCommandYawToCurrent();
-  pShooter->rampspeed = 0;
-  //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
-  //MotorControl_L1.GetEncoder().SetPosition(0);
-  pShooter->BallsShot = 0;
-
+  TeleopMain->TeleopInit();  
 }
 
 void Robot::TeleopPeriodic() 
 {
-  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //RobotDrive.DriveCartesian(DriverCMD.fStrafe(), -DriverCMD.fMoveForward(), -DriverCMD.fRotate(), 0.0);
-  //pShooter->ShooterMain(); 
-  TeleopMain->TeleopMain();
+  //TeleopMain->TeleopMain();
+  // WestDrive->ManualDrive(true);
+  // float pos = DriverCMD.fTestSelector(1);
+  // CtrlServo.SetAngle(pos);
+  // frc::SmartDashboard::PutNumber("Pos", pos);
+  // frc::SmartDashboard::PutNumber("Servo Position", CtrlServo.GetAngle());
+  CtrlPanel->ColorTest();
 }
 
 void Robot::TestPeriodic()

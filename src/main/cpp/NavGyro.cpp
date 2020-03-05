@@ -93,6 +93,8 @@ void NavGyro::UpdateValues()
 	int   UpdateRate = pNavX->GetRequestedUpdateRate();
 	bool  bMoving    = pNavX->IsMoving();
 	pNavX->UpdateDisplacement(fAccelX,fAccelY,UpdateRate,true);
+    NavDebug.PutNumber("Yaw", GetYaw());
+    NavDebug.PutNumber("Command Yaw", fGyroCommandYaw);
 }
 #endif
 
@@ -205,7 +207,7 @@ float  NavGyro::GetRotate(float fRotateMax)
     else
         {
         // Calculate drive train rotate command value
-        fRotateCmd = this->GetYawError() * -0.05; // .05 on comp bot -- Houston
+        fRotateCmd = this->GetYawError() * -0.065; // .05 on comp bot -- Houston
 
         // Make use rotate command doesn't exceed max limits
         if (fRotateCmd >  fRotateMax) fRotateCmd =  fRotateMax;

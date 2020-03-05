@@ -13,7 +13,7 @@
 #ifdef NAVX
 #include <AHRS.h>
 #endif
-
+#include "Debug.h"
 #ifdef ADXRS_GYRO
 #include "frc/wpilib.h"
 #endif
@@ -74,7 +74,7 @@ public:
     float	GetDisplacemetY();
     float	GetDisplacemetZ();
 #endif
-    
+    Debug NavDebug{"NavX"};
 };
 
 // ============================================================================

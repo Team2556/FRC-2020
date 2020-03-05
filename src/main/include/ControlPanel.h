@@ -19,10 +19,10 @@ class ControlPanel {
 
   void ColorTest();
   bool Rotate(int spinNum);
-  char DetermineColor();
+  int DetermineColor();
   void ManualRotate(int i);
-  char GetColorNeeded();
-  bool RotateToColor(char givenColor = 'R');
+  int GetColorNeeded();
+  bool RotateToColor(int givenColor = 3);
   bool ServoUp();
   bool ServoDown();
 };
