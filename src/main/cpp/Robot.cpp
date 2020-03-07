@@ -79,13 +79,13 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 {
-  //TeleopMain->TeleopMain();
+  TeleopMain->TeleopMain();
   // WestDrive->ManualDrive(true);
   // float pos = DriverCMD.fTestSelector(1);
   // CtrlServo.SetAngle(pos);
   // frc::SmartDashboard::PutNumber("Pos", pos);
   // frc::SmartDashboard::PutNumber("Servo Position", CtrlServo.GetAngle());
-  CtrlPanel->ColorTest();
+  //CtrlPanel->ColorTest();
 }
 
 void Robot::TestPeriodic()

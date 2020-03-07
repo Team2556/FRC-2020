@@ -18,39 +18,88 @@ void ControlPanel::ColorTest() {
     frc::SmartDashboard::PutNumber("Red Detected", detectedColor.red);
     frc::SmartDashboard::PutNumber("Green Detected", detectedColor.green);
     frc::SmartDashboard::PutNumber("Blue Detected", detectedColor.blue);
+    DetermineColor();
+    // pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.25);
+
+    // static int counter = 0;
+    // static bool done = false;
+    // if(DetermineColor() == 1 && done == false) {
+    //     counter++;
+    // }
+    // else if(counter > 0 && DetermineColor() != 1) {
+    //     done = true;
+    // }
+    // frc::SmartDashboard::PutNumber("Count", counter);
 }
 
-//return a letter R, G, B, or Y representing the different possible colors 
+//return 0, 1, 2, or 3 representing red, green, blue, or yellow
 int ControlPanel::DetermineColor() {
+    //saves the last color to know when the next color on the wheel is being seen accurately
+    //ensures that color blending is not an issue
+    static int previousColor = -1;
+
+
     frc::Color            detectedColor = ColorSensor.GetColor();
     //create RGB array from sensor
     double colorsRGB[3] = {detectedColor.red, detectedColor.green, detectedColor.blue};
-    float testVal = 0.35;
-    if(colorsRGB[0] >= 0.45) 
+    
+    
+    if(colorsRGB[0] >= 0.4)
     {
-        //Color is Red
-        frc::SmartDashboard::PutString("Color", "Red");
-        return 0;
+        if(previousColor != 1 && previousColor != -1) //if previous color was not green, then the current color cannot be red.
+        {
+            return previousColor;
+        }
+        else
+        {
+            //Color is Red
+            frc::SmartDashboard::PutString("Color", "Red");
+            previousColor = 0;
+            return 0;
+        }
     } 
-    else if(colorsRGB[0] <= testVal && colorsRGB[1] >= testVal && colorsRGB[2] <= testVal) 
+    else if(colorsRGB[2] >= 0.25) 
     {
-        //Color is Green
-        frc::SmartDashboard::PutString("Color", "Green");
-        return 1;
+        if(previousColor != 3 && previousColor != -1) //if previous color was not yellow, then the current color cannot be blue.
+        {
+            return previousColor;
+        }
+        else 
+        {
+            //Color is Blue
+            frc::SmartDashboard::PutString("Color", "Blue");
+            previousColor = 2;
+            return 2;
+        }
     } 
-    else if(colorsRGB[0] <= testVal && colorsRGB[1] >= testVal && colorsRGB[2] >= testVal) 
+    else if(colorsRGB[0] <= 0.3) 
     {
-        //Color is Blue
-        frc::SmartDashboard::PutString("Color", "Blue");
-        return 2;
+        if(previousColor != 2 && previousColor != -1)
+        {
+            return previousColor;
+        }
+        else
+        {
+            //Color is Green
+            frc::SmartDashboard::PutString("Color", "Green");
+            previousColor = 1;
+            return 1;
+        }
     } 
-    else if(colorsRGB[0] >= 0.3 && colorsRGB[1] >= testVal && colorsRGB[2] <= testVal) 
+    else
     {
-        //Color is Yellow
-        frc::SmartDashboard::PutString("Color", "Yellow");
-        return 3;
+        if(previousColor != 0 && previousColor != -1)
+        {
+            return previousColor;
+        }
+        else
+        {
+            //Color is Yellow
+            frc::SmartDashboard::PutString("Color", "Yellow");
+            previousColor = 3;
+            return 3;
+        }
     }
-    else return -1;
 }
 
 
@@ -63,7 +112,7 @@ bool ControlPanel::Rotate(int spinNum) {
 
     ServoDown();
     static int counter = 0;
-    if(counter < 8)
+    if(counter < 25)
     {
         counter++;
         return false;
@@ -71,9 +120,15 @@ bool ControlPanel::Rotate(int spinNum) {
 
     frc::SmartDashboard::PutNumber("Rotations", rotations);
 
-    //sets colorNum as a one letter string representing the first letter of red, green, blue, and yellow
+    //sets colorNum to the number representing the color being read when function starts
     static int colorNumInit = DetermineColor();
-    //basically calling DetermineColor() but cooler
+    //if we rotate a second time, colorNum is what is read when function starts
+    if(colorNumInit == -1)
+    {
+        colorNumInit = DetermineColor();
+    }
+
+
     frc::SmartDashboard::PutNumber("Init Color", colorNumInit);
     int colorNum = DetermineColor();
     frc::SmartDashboard::PutNumber("Current Color", colorNum);
@@ -99,6 +154,7 @@ bool ControlPanel::Rotate(int spinNum) {
         rotations = 0;
         ServoUp();
         counter = 0;
+        colorNumInit = -1;
         return true;
     }
 
@@ -113,7 +169,7 @@ bool ControlPanel::RotateToColor(int givenColor)
 {
     ServoDown();
     static int counter = 0;
-    if(counter < 8)
+    if(counter < 25)
     {
         counter++;
         return false;
@@ -128,16 +184,21 @@ bool ControlPanel::RotateToColor(int givenColor)
     int currColor = DetermineColor();
     frc::SmartDashboard::PutNumber("Rotating To:", colorNeeded);
     frc::SmartDashboard::PutNumber("Current Color", currColor);
-    
-    if(currColor == colorNeeded)
+    static bool spun = false;
+    if(currColor == colorNeeded && spun)
     {
         ServoUp();
         counter = 0;
+        spun = false;
         return true;
     }
     else
     {
         pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.2);
+    }
+    if(colorNeeded != currColor)
+    {
+        spun = true;
     }
     return false;
 }
@@ -158,19 +219,19 @@ int ControlPanel::GetColorNeeded() {
     gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
     if(gameData[0] == 'R')
     {
-        return 1;
+        return 2;
     }
     if(gameData[0] == 'G')
     {
-        return 2;
+        return 3;
     }
     if(gameData[0] == 'B')
     {
-        return 3;
+        return 0;
     }
     if(gameData[0] == 'Y')
     {
-        return 0;
+        return 1;
     }
     else 
     {
