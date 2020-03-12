@@ -58,10 +58,10 @@ void Feeder::IntakeExtend(bool extended)
 {
     if (extended)
     {
-        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
     }
     else
     {
-        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+        pRobot->Intake_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
     }
 }

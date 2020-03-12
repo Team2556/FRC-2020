@@ -41,13 +41,20 @@ class Shooter : frc::PIDSource
 
   void SpinUp();
   float SpinUpDistance(float distance  = -1, bool manual = true);
+  float SpinUpNEODistance(float distance  = -1, bool manual = true);
   void StopShoot();
+  void StopShootNEO();
+  void SpinUpNEO(float speed);
+  void SpinUpNEOVelocity(float power);
 
   void CountBalls();
 
   void ShooterGate(bool open);
 
   void TestShoot();
+
+  void AimNeo();
+  void AimManualNeo();
 
   Robot * pRobot; 
   Feeder * pFeeder;
@@ -64,6 +71,6 @@ class Shooter : frc::PIDSource
   void    PIDEnable(bool bEnable);
   double  PIDGet();
 
-  Debug   ShooterDebug{"Shooter"};
+  Debug   ShooterDebug{"/Subsystems/Shooter"};
 };
 

@@ -34,6 +34,7 @@
 #include "NavGyro.h"
 #include "Limelight.h"
 #include "GarminLidar.h"
+#include "Debug.h"
 
 
 
@@ -56,6 +57,10 @@ class Robot : public frc::TimedRobot {
   void DisabledInit() override;
   void DisabledPeriodic() override;
   void TestPeriodic() override;
+
+  void SwitchCamera();
+
+  
 
 
   
@@ -80,12 +85,18 @@ class Robot : public frc::TimedRobot {
 
   WPI_TalonSRX                Shooter_Motor_1{SHOOTER_1};
   WPI_TalonSRX                Shooter_Motor_2{SHOOTER_2};
-  
+  rev::CANSparkMax            Shooter_Motor_1_NEO{SHOOTER_1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax            Shooter_Motor_2_NEO{SHOOTER_2, rev::CANSparkMax::MotorType::kBrushless};
+
+  rev::CANEncoder             Shooter_Encoder = Shooter_Motor_1_NEO.GetEncoder();
+  rev::CANPIDController       Shooter_PID_Controller = Shooter_Motor_1_NEO.GetPIDController();
   
   
   WPI_TalonSRX                Turret_Motor{TURRET};
+  rev::CANSparkMax            Turret_Neo{TURRET, rev::CANSparkMax::MotorType::kBrushless};
 
   WPI_TalonSRX                Intake_Motor{CAN_INTAKE};
+  
   WPI_TalonSRX                Feeder_Low_Motor{FEEDER_LOW};
   WPI_TalonSRX                Feeder_High_Motor{FEEDER_HIGH};
   WPI_TalonSRX                Hood_Motor{HOOD_LINKAGE};
@@ -122,6 +133,7 @@ class Robot : public frc::TimedRobot {
   GarminLidar                 ShooterDistance;
 
   std::shared_ptr<NetworkTable> PixyTable = nt::NetworkTableInstance::GetDefault().GetTable("Pixy");
+  std::shared_ptr<NetworkTable> CameraTable = nt::NetworkTableInstance::GetDefault().GetTable("CameraPublisher");
 
  //Test
 

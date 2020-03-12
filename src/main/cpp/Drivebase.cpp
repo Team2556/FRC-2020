@@ -15,12 +15,14 @@ Drivebase::Drivebase(Robot * pRobot)
 }
 
 
+
 void Drivebase::ManualDrive(bool GyroEnabled)
 {
     float fForward = pRobot->DriverCMD.fMoveForward();
     float fRotate = pRobot->DriverCMD.fRotate();
-    frc::SmartDashboard::PutNumber("Forward", fForward);
-    frc::SmartDashboard::PutNumber("Rotate", fRotate);
+    bool  bQuickTurn = pRobot->DriverCMD.bQuickTurn();
+    DrivebaseDebug.PutNumber("Forward", fForward);
+    DrivebaseDebug.PutNumber("Rotate", fRotate);
 
     if(GyroEnabled)
     {
@@ -58,23 +60,30 @@ void Drivebase::ManualDrive(bool GyroEnabled)
             if (fRotate < -0.8) fRotate  = -0.8;
 
             pRobot->Nav.SetCommandYawToCurrent();
-            frc::SmartDashboard::PutBoolean("Gryo Enabled", false);
+            DrivebaseDebug.PutBoolean("Gryo Enabled", false);
+            bQuickTurn = pRobot->DriverCMD.bQuickTurn();
         }
         else
         {
             // Calculate a rotation rate from robot angle error
             fRotate = pRobot->Nav.GetRotate();
-            frc::SmartDashboard::PutBoolean("Gryo Enabled", true);
+            DrivebaseDebug.PutBoolean("Gryo Enabled", true);
+            bQuickTurn = true;
         }
     }
 
-
+    //#define TANK_DRIVE
     #ifndef TANK_DRIVE
     if (pRobot->DriverCMD.flipDrive)
     {
         fForward = -fForward;
     }
-    pRobot->WestCoastDrive.ArcadeDrive(fForward, fRotate);
+    DrivebaseDebug.PutBoolean("Quick Turn", bQuickTurn);
+    
+    RampedDrive(fForward, fRotate, bRotatePrevious);
+
+    
+    //pRobot->WestCoastDrive.CurvatureDrive(fForward, fRotate, bQuickTurn);
 
     #else
     fForward = pRobot->DriverCMD.fTankLeft();
@@ -86,6 +95,51 @@ void Drivebase::ManualDrive(bool GyroEnabled)
     }
     pRobot->WestCoastDrive.TankDrive(fForward, fRotate);
     #endif
+}
+
+void Drivebase::RampedDrive(float fForward, float fRotate, bool rampRotate)
+{
+    static float prevForward = fForward;
+    static float prevRotate = fRotate;
+    float trueForward;
+    float trueRotate;
+
+    float maxForwardRamp = .025;//frc::SmartDashboard::GetNumber("Max Forward Ramp", 0.02);//.05; //.02 on Banshee
+    float maxRotateRamp = .015; //frc::SmartDashboard::GetNumber("Max Rotate Ramp", 0.02);//.05; //.02 on Banshee
+    frc::SmartDashboard::PutNumber("Max Forward Ramp", maxForwardRamp);
+    frc::SmartDashboard::PutNumber("Max Rotate Ramp", maxRotateRamp);
+    DrivebaseDebug.PutNumber("Max Forward Ramp", maxForwardRamp);
+    DrivebaseDebug.PutNumber("Max Rotate Ramp", maxRotateRamp);
+
+    if(fabs(prevForward - fForward) < maxForwardRamp)
+    {
+        trueForward = fForward;
+    }
+    else
+    {
+        trueForward = prevForward +  pRobot->DriverCMD.sign((prevForward - fForward))*(-1)*(maxForwardRamp);
+    }
+    //ramp rotate
+    if(rampRotate)
+    {
+        if(fabs(prevRotate - fRotate) < maxRotateRamp)
+        {
+            trueRotate = fRotate;
+        }
+        else
+        {
+            trueRotate = prevRotate + pRobot->DriverCMD.sign((prevRotate - fRotate))*(-1)*(maxRotateRamp);
+        }
+    }
+    else
+    {
+        trueRotate = fRotate;
+    }
+
+    pRobot->WestCoastDrive.CurvatureDrive(trueForward, trueRotate, pRobot->DriverCMD.bQuickTurn());
+
+    prevForward = trueForward;
+    prevRotate = trueRotate;
 }
 
 void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
@@ -127,13 +181,13 @@ void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
             if (fRotate < -0.8) fRotate  = -0.8;
 
             pRobot->Nav.SetCommandYawToCurrent();
-            frc::SmartDashboard::PutBoolean("Gryo Enabled", false);
+            DrivebaseDebug.PutBoolean("Gryo Enabled", false);
         }
         else
         {
             // Calculate a rotation rate from robot angle error
             fRotate = pRobot->Nav.GetRotate();
-            frc::SmartDashboard::PutBoolean("Gryo Enabled", true);
+            DrivebaseDebug.PutBoolean("Gryo Enabled", true);
         }
     }
     else
@@ -162,12 +216,12 @@ void Drivebase::ManualTransmission()
     if(pRobot->DriverCMD.DriveGear == OI::TransmissionState::Low)
     {
         pRobot->Transmission.Set(frc::DoubleSolenoid::Value::kForward);
-        frc::SmartDashboard::PutString("Gear", "Low");
+        DrivebaseDebug.PutString("Gear", "Low");
     }
     else if(pRobot->DriverCMD.DriveGear == OI::TransmissionState::High)
     {
         pRobot->Transmission.Set(frc::DoubleSolenoid::Value::kReverse);
-        frc::SmartDashboard::PutString("Gear", "High");
+        DrivebaseDebug.PutString("Gear", "High");
     }
 }
 
@@ -176,12 +230,12 @@ void Drivebase::AutoTransmission(OI::TransmissionState bTransmissionState)
     if(bTransmissionState == OI::TransmissionState::Low)
     {
         pRobot->Transmission.Set(frc::DoubleSolenoid::Value::kForward);
-        frc::SmartDashboard::PutString("Gear", "Low");
+        DrivebaseDebug.PutString("Gear", "Low");
     }
     else if(bTransmissionState == OI::TransmissionState::High)
     {
         pRobot->Transmission.Set(frc::DoubleSolenoid::Value::kReverse);
-        frc::SmartDashboard::PutString("Gear", "High");
+        DrivebaseDebug.PutString("Gear", "High");
     }
 }
 

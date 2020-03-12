@@ -10,6 +10,7 @@
 #include "frc/I2C.h"
 #include "frc/DigitalInput.h"
 #include "frc/DigitalOutput.h"
+#include "Debug.h"
 
 class GarminLidar {
  public:
@@ -19,9 +20,12 @@ class GarminLidar {
   
   frc::DigitalInput dioMeasuring{22};
   frc::DigitalOutput dioTrigger{23};
+  frc::DigitalOutput dioReset{21};
   int distance;
 
   float read();
   bool Connected();
   int IterativeDistance();
+
+  Debug LidarDebug{"Subsystems/Lidar"};
 };

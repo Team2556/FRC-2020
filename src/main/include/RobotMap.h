@@ -32,16 +32,17 @@
 
 
 //PCM Ports
-#define         TRANSMISSION_LOW        0
-#define         TRANSMISSION_HIGH       1
-#define         INTAKE_OUT              2
-#define         INTAKE_IN               3
-#define         SHOOTER_CLOSED          4
-#define         SHOOTER_OPEN            5
-#define         CLIMB_UP                6
-#define         CLIMB_DOWN              7
+#define         TRANSMISSION_LOW        6
+#define         TRANSMISSION_HIGH       7
+#define         INTAKE_OUT              0
+#define         INTAKE_IN               1
+#define         SHOOTER_CLOSED          3
+#define         SHOOTER_OPEN            2
+#define         CLIMB_UP                5
+#define         CLIMB_DOWN              4
 
 
 //DIO Ports
 #define         DIO_US_RANGE_TRIGGER    0
 #define         DIO_US_RANGE_PULSE      1
+

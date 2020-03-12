@@ -17,11 +17,14 @@ class OI {
   //General Functions
   void UpdateOI();
   bool BreakAuto();
+  float sign(float value);
+  std::string GetCamera();
 
 
   //Driver Commands
   float fMoveForward();
   float fRotate();
+  bool  bQuickTurn();
   float fTankLeft();
   float fTankRight();
   float fStrafe(); //this is just for use when testing with mecanum
@@ -37,7 +40,8 @@ class OI {
   TransmissionState       DriveGear;
   DriveMode               CurrDriveMode;
 
-  bool flipDrive = false;
+  bool flipDrive = true;
+  bool driveDirChanged = true;
 
 //CoDriver COmmands
 
@@ -61,7 +65,8 @@ class OI {
   bool AutoAim();
   float fManualShootSpeed();
   float fManualHoodSpeed();
-  float fManualTurretSpeed();  
+  float fManualTurretSpeed();
+  bool bShootPreset1();  
 
 
   //control pannel
@@ -88,3 +93,5 @@ class OI {
     frc::XboxController   Xbox2{XBOX_TWO};
     frc::XboxController   Xbox3{XBOX_THREE};
 };
+
+

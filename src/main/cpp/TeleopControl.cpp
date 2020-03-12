@@ -35,7 +35,7 @@ void TeleopControl::TeleopMain()
   {
   case AutomationStateEnum::BallPickup:
     frc::SmartDashboard::PutString("Teleop State", "Ball Pickup");
-    BreakAuto = autoBallPickup();
+    BreakAuto = autoBallPickup(false);
     break;
   case AutomationStateEnum::Shoot:
     frc::SmartDashboard::PutString("Teleop State", "Shoot");
@@ -44,6 +44,10 @@ void TeleopControl::TeleopMain()
   case AutomationStateEnum::Manual:
     frc::SmartDashboard::PutString("Teleop State", "Manual");
     ManualMain();
+    break;
+  case AutomationStateEnum::RotationControl:
+    frc::SmartDashboard::PutString("Teleop State", "CP Rotate");
+    BreakAuto = CtrlPanelObj->RotationControl(false);
     break;
   default:
     frc::SmartDashboard::PutString("Teleop State", "Error");
@@ -54,9 +58,15 @@ void TeleopControl::TeleopMain()
     AutomationState = AutomationStateEnum::Manual;
     iState = 20;
   }
-  if(pRobot->DriverCMD.bTestButton(2))
+  if(false)//pRobot->DriverCMD.bTestButton(2))
   {
     AutomationState = AutomationStateEnum::BallPickup;
+    autoBallPickup(true);
+  }
+  if(pRobot->DriverCMD.CPRotate())
+  {
+    AutomationState = AutomationStateEnum::RotationControl;
+    CtrlPanelObj->RotationControl(true);
   }
   if(pRobot->DriverCMD.bTestButton(8))
   {
@@ -95,22 +105,55 @@ void TeleopControl::TeleopDrive()
 
 void TeleopControl::ManualMain()
 {
-  WestDrive->ManualDrive(true);
+  WestDrive->ManualDrive(false);
   WestDrive->ManualTransmission();
   pFeeder->IntakeMain();
-  pClimber->ClimbManual();
   CtrlPanelObj->DetermineColor();
   pShooter->ShooterManual();
   CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPManualRotate());
   pClimber->ClimbManual();
 }
 
-bool TeleopControl::autoBallPickup()
+bool TeleopControl::autoBallPickup(bool reset)
 {
-  WestDrive->AutoDrive(pRobot->DriverCMD.fMoveForward(), (pRobot->PixyTable->GetNumber("X", 2556) - 160)*-.025 + pRobot->DriverCMD.fRotate()*.25, false);
-  pFeeder->RunIntake(-.75);
-  pFeeder->BottomFeeder(.5);
-  return (pRobot->PixyTable->GetNumber("Time Since", 100) > 2);
+  static int prevX = 0;
+  if(reset)
+  {
+    if(pRobot->PixyTable->GetBoolean("Ball Tracked", false) == false)
+    {
+      return true;
+    }
+    else
+    {
+      prevX = pRobot->PixyTable->GetNumber("X", 2556);
+      return false;
+    }
+  
+  }
+  else
+  {
+    bool ended;// (currX - 160)*-.005
+    int currX = (pRobot->PixyTable->GetNumber("X", 2556));
+    float fRotate = (currX - 160)*-.0065 - pRobot->DriverCMD.sign(currX-160) * .17;
+    float MaxRotate = .5;
+
+    if(fRotate > MaxRotate)
+    {
+      fRotate = MaxRotate;
+    }
+    else if(fRotate < -MaxRotate)
+    {
+      fRotate = -MaxRotate;
+    }
+    WestDrive->AutoDrive(pRobot->DriverCMD.fMoveForward(), fRotate, false);
+
+    pFeeder->RunIntake(-.75);
+    pFeeder->BottomFeeder(.5);
+    ended = (pRobot->PixyTable->GetNumber("Time Since", 100) > 2) || fabs(currX - prevX) > 40;
+    prevX = currX;
+    return ended;
+  }
+
 }
 
 bool TeleopControl::autoShoot(bool intake)

@@ -27,7 +27,7 @@ void Auto::AutoInit()
 void Auto::AutoPeriodic()
 {
     //WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
-    frc::SmartDashboard::PutNumber("Encoder Position", CurrentAutoPosition());
+    AutoDebug.PutNumber("Encoder Position", CurrentAutoPosition());
 }
 
 
@@ -55,7 +55,7 @@ void Auto::Auto1()
         break;
 
         case 10: // shoot preloaded balls
-            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance);
+            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance, -750, false);
 
             if (iShootState == 50)
             {
@@ -67,26 +67,26 @@ void Auto::Auto1()
             }
             if (bStateDone)
             {
-                iState = 30;
+                iState = 20;
                 iCounter = 0;
                 pShooter->ShooterGate(false);
             }
         break;
         
         case 20:
-            fForward = -.65;
+            fForward = -.75;
             WestDrive->AutoDrive(fForward, 0.0, true);
             WestDrive->AutoTransmission(OI::TransmissionState::Low);
             pFeeder->IntakeExtend(false);
             pFeeder->RunIntake(-1);
             pFeeder->BottomFeeder(.8);
             pFeeder->TopFeeder(-.5);
-            pShooter->Aim();
-            pShooter->SpinUpDistance();
+            pShooter->AimNeo();
+            pShooter->SpinUpNEODistance(-1, false);
             pShooter->AutoHood();
-            if(fabs(15.0-CurrentAutoPosition())< .1 )
+            if(fabs(15.5-CurrentAutoPosition())< .1 )
             {
-                iState  = 40;
+                iState  = 35;
                 iCounter = 0;
                 iShootState = 20;
             }
@@ -147,7 +147,7 @@ void Auto::Auto1()
         
         case 37:
 
-        bStateDone = this->autoShoot(pRobot->ShooterDistance.distance);
+        bStateDone = this->autoShoot(pRobot->ShooterDistance.distance, -825);
         pFeeder->RunIntake(-1);
         pFeeder->BottomFeeder(.8);
         pFeeder->TopFeeder(-.5);
@@ -169,7 +169,7 @@ void Auto::Auto1()
 
         
         case 40:
-            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance, true);
+            bStateDone = this->autoShoot(pRobot->ShooterDistance.distance + 40, -850, true);
 
         //     if (iShootState == 50)
         //     {
@@ -198,11 +198,11 @@ void Auto::Auto1()
 
 
 
-bool Auto::autoShoot(float distance, bool intake)
+bool Auto::autoShoot(float distance, float hoodVal, bool intake)
 {
   static int iShootCounter = 0;
   float velocity_error;
-  frc::SmartDashboard::PutNumber("Shoot State", iShootState);
+  AutoDebug.PutNumber("Shoot State", iShootState);
   pShooter->CountBalls();
   switch (iShootState)
   {
@@ -240,13 +240,14 @@ bool Auto::autoShoot(float distance, bool intake)
 
     case 30:
       // prepare to shoot
-      pShooter->Aim();
-      velocity_error = pShooter->SpinUpDistance(distance, false);
-      pShooter->AutoHood();
+      pShooter->AimNeo();
+      velocity_error = pShooter->SpinUpNEODistance(distance, false);
+      pRobot->Hood_Motor.Set(ControlMode::Position, hoodVal);
+      //pShooter->AutoHood(distance + 20);
       pShooter->ShooterDebug.PutNumber("Velocity Error", velocity_error);
 
       
-      if(fabs(pShooter->fYawPIDValue) < .05 && fabs(velocity_error) < 700 )
+      if(fabs(pShooter->fYawPIDValue) < .05 && fabs(velocity_error) < 500 )
       {
         iShootCounter++;
       }
@@ -266,9 +267,10 @@ bool Auto::autoShoot(float distance, bool intake)
       // open gate
       pShooter->ShooterGate(true);
       iShootState = 50;
-      pShooter->Aim();
-      pShooter->SpinUpDistance();
-      pShooter->AutoHood();
+      pShooter->AimNeo();
+      pShooter->SpinUpNEODistance();
+      //pShooter->AutoHood(distance + 20);
+      pRobot->Hood_Motor.Set(ControlMode::Position, hoodVal);
       break;
     
     //Case 50/60 
@@ -278,12 +280,13 @@ bool Auto::autoShoot(float distance, bool intake)
       pFeeder->BottomFeeder(.8);
       pFeeder->RunIntake(-intake);
       iShootCounter++;
-      pShooter->Aim();
+      pShooter->AimNeo();
       velocity_error = pShooter->SpinUpDistance(distance, false);
-      pShooter->AutoHood();
+      pRobot->Hood_Motor.Set(ControlMode::Position, hoodVal);
+      //pShooter->AutoHood(distance + 20);
       
       
-      if(fabs(velocity_error) > 700)
+      if(fabs(velocity_error) > 400)
       {
         iShootState = 30;
         pFeeder->RunIntake(0);
