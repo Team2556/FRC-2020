@@ -24,12 +24,21 @@ void TeleopControl::TeleopInit()
     pShooter->rampspeed = 0;
     AutomationState = AutomationStateEnum::Manual;
     pShooter->SetTurretHome();
+    pRobot->Nav.SetCommandYawToCurrent();
+    //MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
+    //MotorControl_L1.GetEncoder().SetPosition(0);   
+      pRobot->Shooter_Motor_1.SetSelectedSensorPosition(0);    
+
+  
+  pShooter->BallsShot = 0;
     
 }
 
 
 void TeleopControl::TeleopMain()
 {
+  pRobot->DriverCMD.UpdateOI();
+
   bool BreakAuto = false;
   switch (AutomationState)
   {
@@ -45,7 +54,7 @@ void TeleopControl::TeleopMain()
     frc::SmartDashboard::PutString("Teleop State", "Manual");
     ManualMain();
     break;
-  case AutomationStateEnum::RotationControl:
+  case AutomationStateEnum::CPRotate:
     frc::SmartDashboard::PutString("Teleop State", "CP Rotate");
     BreakAuto = CtrlPanelObj->RotationControl(false);
     break;
@@ -65,7 +74,7 @@ void TeleopControl::TeleopMain()
   }
   if(pRobot->DriverCMD.CPRotate())
   {
-    AutomationState = AutomationStateEnum::RotationControl;
+    AutomationState = AutomationStateEnum::CPRotate;
     CtrlPanelObj->RotationControl(true);
   }
   if(pRobot->DriverCMD.bTestButton(8))
@@ -78,6 +87,21 @@ void TeleopControl::TeleopMain()
   {
     frc::SmartDashboard::PutBoolean("Shoot start", false);
   }
+  if(pRobot->DriverCMD.CPRotate())
+  {
+    AutomationState = AutomationStateEnum::CPRotate;
+  }
+  if(pRobot->DriverCMD.CPToColor())
+  {
+    AutomationState = AutomationStateEnum::CPToColor;
+  }
+
+ 
+
+  
+  pShooter->ShooterDebug.PutNumber("Hood Angle", pRobot->Hood_Motor.GetSelectedSensorPosition());
+  pShooter->ShooterDebug.PutNumber("Target Power", pRobot->DriverCMD.speedMult);
+  frc::SmartDashboard::PutNumber("Distance", pRobot->ShooterDistance.distance);
 }
 
 void TeleopControl::TeleopDrive()
@@ -112,6 +136,7 @@ void TeleopControl::ManualMain()
   pShooter->ShooterManual();
   CtrlPanelObj->ManualRotate(pRobot->DriverCMD.CPManualRotate());
   pClimber->ClimbManual();
+  CtrlPanelObj->ServoUp();
 }
 
 bool TeleopControl::autoBallPickup(bool reset)

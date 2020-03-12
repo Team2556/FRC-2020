@@ -132,6 +132,8 @@ class Robot : public frc::TimedRobot {
   NavGyro                     Nav;
   GarminLidar                 ShooterDistance;
 
+  frc::Servo                  CtrlServo{CPSERVO};
+  
   std::shared_ptr<NetworkTable> PixyTable = nt::NetworkTableInstance::GetDefault().GetTable("Pixy");
   std::shared_ptr<NetworkTable> CameraTable = nt::NetworkTableInstance::GetDefault().GetTable("CameraPublisher");
 
@@ -139,11 +141,15 @@ class Robot : public frc::TimedRobot {
 
 float encoderstart;
 
+  frc::SendableChooser<std::string> AutoChooser;
+
+  const std::string AutoTeleop = "Teleop";
+  const std::string Auto1 = "Auto 1";
+  const std::string Auto2 = "Auto 2";
+  const std::string Auto3 = "Auto 3";
+  std::string AutoMode;
 
 
  private:
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::string m_autoSelected;
+  
 };

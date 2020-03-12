@@ -36,7 +36,7 @@ class TeleopControl {
 
   bool bAllowManualDrive;
 
-  enum AutomationStateEnum{Manual, BallPickup, Shoot, CPToColor, CPRotate, RotationControl};
+  enum AutomationStateEnum{Manual, BallPickup, Shoot, CPRotate, CPToColor};
 
   int iState = 0;
   int iBallsToShoot = 0;

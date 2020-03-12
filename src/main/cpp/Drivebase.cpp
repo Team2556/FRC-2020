@@ -178,7 +178,6 @@ void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
             if (fRotate >  0.0) fRotate -= 0.05;
             if (fRotate <  0.0) fRotate += 0.05;
             if (fRotate >  0.8) fRotate  =  0.8;
-            if (fRotate < -0.8) fRotate  = -0.8;
 
             pRobot->Nav.SetCommandYawToCurrent();
             DrivebaseDebug.PutBoolean("Gryo Enabled", false);
@@ -190,6 +189,12 @@ void Drivebase::AutoDrive(float fForward, float fRotate,  bool GyroEnabled)
             DrivebaseDebug.PutBoolean("Gryo Enabled", true);
         }
     }
+    if (pRobot->DriverCMD.flipDrive)
+    {
+        fForward = -fForward;
+    }
+        
+    
     else
     {
         pRobot->Nav.SetCommandYawToCurrent();

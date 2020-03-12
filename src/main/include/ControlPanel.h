@@ -12,18 +12,20 @@ class ControlPanel {
  public:
   ControlPanel(Robot * pRobot);
   Robot * pRobot;
-  static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
+  static constexpr auto i2cPort = frc::I2C::Port::kMXP;
   rev::ColorSensorV3    ColorSensor{i2cPort};
   
-
+  int rotations = 0;
 
   void ColorTest();
-  void Rotate(int spinNum);
-  char DetermineColor();
+  bool Rotate(int spinNum);
+  int DetermineColor();
   void ManualRotate(int i);
-  char GetColorNeeded();
-  void RotateToColor();
   bool RotationControl(bool reset);
+  int GetColorNeeded();
+  bool RotateToColor(int givenColor = 3);
+  bool ServoUp();
+  bool ServoDown();
 
   Debug   CPDebug{"/Subsystems/ControlPanel"};
 };

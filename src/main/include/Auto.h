@@ -27,8 +27,16 @@ class Auto {
 
   float currentPosition = 0;//pRobot->m_encoder.GetPosition();
 
+  int AutoNum;
+
   void AutoInit();
   void AutoPeriodic();
+  void AutoChooser();
+  void AutoOne();
+  void AutoTwo();
+  void AutoThree();
+
+  float startPos;
   float CurrentAutoPosition();
   bool autoShoot(float distance, float hoodVal,  bool intake = false);
 
