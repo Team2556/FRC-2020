@@ -20,4 +20,6 @@ class Feeder {
   void BottomFeeder(float speed);
   void TopFeeder(float speed);
   void IntakeExtend(bool extended);
+
+  Debug   FeederDebug{"/Subsystems/Feeder"};
 };

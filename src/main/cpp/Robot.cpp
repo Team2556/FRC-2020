@@ -27,8 +27,18 @@ ControlPanel      * CtrlPanel;
 Feeder            * pFeeder;
 Climber           * pClimber;
 
+void Robot::SwitchCamera()
+{
+  std::string camera = DriverCMD.GetCamera();
+  if (camera != "-1")
+  {
+    CameraTable->PutString("selected", camera);
+  }
+}
+
 void Robot::RobotInit() 
 {
+  Intake_Motor.SetInverted(true);
   WestDrive  = new Drivebase(this);
   CtrlPanel = new ControlPanel(this);
   pFeeder = new Feeder(this);
@@ -49,9 +59,22 @@ void Robot::RobotInit()
 
 
 void Robot::RobotPeriodic() 
-{
-  ShooterDistance.IterativeDistance();
+{ 
+  static int icounter = 0;
+  icounter++;
+  if(!DriverCMD.bTestButton(6) && (icounter%2) == 0)
+  {
+    ShooterDistance.IterativeDistance();
+    ShooterDistance.LidarDebug.PutBoolean("Measuring", true);
+  }
+  else
+  {
+    ShooterDistance.LidarDebug.PutBoolean("Measuring", false);
+  }
+  ShooterDistance.dioReset.Set(!DriverCMD.bTestButton(7));
+  ShooterDistance.LidarDebug.PutBoolean("Reseting", ShooterDistance.dioReset.Get());
   Nav.UpdateValues();
+  //SwitchCamera();
 }
 
 
@@ -92,7 +115,8 @@ void Robot::TeleopPeriodic()
   TeleopMain->TeleopMain();
   //static bool state = false;
   DriverCMD.UpdateOI();
-  SmartDashboard::PutNumber("Hood Angle", Hood_Motor.GetSelectedSensorPosition());
+  pShooter->ShooterDebug.PutNumber("Hood Angle", Hood_Motor.GetSelectedSensorPosition());
+  pShooter->ShooterDebug.PutNumber("Target Power", DriverCMD.speedMult);
   // float targetvalue = DriverCMD.fTestSelector(10);
   // SmartDashboard::PutNumber("Target Hood Angle", targetvalue);
 
@@ -119,7 +143,10 @@ void Robot::TeleopPeriodic()
 	// {
 	// 	pShooter->AimManual();
 	// }
+  //pShooter->SpinUpNEO(-DriverCMD.fManualShootSpeed());
   frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance);
+
+  
 }
 
 void Robot::TestPeriodic()
@@ -135,6 +162,7 @@ void Robot::DisabledPeriodic()
 {
 
 }
+
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif

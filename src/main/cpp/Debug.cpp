@@ -21,3 +21,9 @@ void Debug::PutNumber(std::string key, float value)
 {
     table->PutNumber(key, value);
 }
+
+void Debug::PutBoolean(std::string key, bool value)
+{
+    table->PutBoolean(key, value);
+}
+

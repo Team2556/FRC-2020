@@ -23,4 +23,7 @@ class ControlPanel {
   void ManualRotate(int i);
   char GetColorNeeded();
   void RotateToColor();
+  bool RotationControl(bool reset);
+
+  Debug   CPDebug{"/Subsystems/ControlPanel"};
 };

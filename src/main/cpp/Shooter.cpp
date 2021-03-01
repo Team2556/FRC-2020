@@ -14,8 +14,11 @@ Shooter::Shooter(Robot * pRobot, Feeder * pFeeder)
 	this->pFeeder = pFeeder;
 
     pPIDOutput = new TurretPIDOutput(&fYawPIDValue);
-    pYawPID    = new frc::PIDController(0.0285, .000, .002, .06, this, pPIDOutput);
+    pYawPID    = new frc::PIDController(-.031, .0, 0.0, 0.0, this, pPIDOutput);
 
+	/* Banshee PID Values
+	0.0285, .000, .002, .06,
+	*/
     PIDEnable(true);
 }
 
@@ -51,8 +54,7 @@ void Shooter::Aim()
 	// {
 		float value = fYawPIDValue;
 		pRobot->Turret_Motor.Set(value);
-		frc::SmartDashboard::PutNumber("PID Output",value);
-		frc::SmartDashboard::PutBoolean("Has Target", true);
+		ShooterDebug.PutNumber("PID Output",value);
 	// }
 	// else
 	// {
@@ -62,6 +64,17 @@ void Shooter::Aim()
 	// 	pRobot->Turret_Motor.Set(.5*pRobot->DriverCMD.fTestValue(6));
 	// }
 	
+}
+
+void Shooter::AimNeo()
+{
+	float value = fYawPIDValue;
+	if (fabs(value)>.75)
+	{
+		value = .75 * pRobot->DriverCMD.sign(value);
+	}
+	pRobot->Turret_Neo.Set(value);
+	ShooterDebug.PutNumber("PID Output",value);
 }
 
 void Shooter::SetTurretHome()
@@ -86,15 +99,23 @@ float DistanceToHoodVal2(float distance)
 	
 	return target;
 }
-
+float DistanceToHoodVal3(float x)
+{
+	return -84024.25 + (872.8695 - -84024.25)/pow((1 + pow(x/27422.04, 0.2790453)), 0.06666149);
+}
 void Shooter::AutoHood(float distance)
 {
+	#define MAX_HOOD_ANGLE -1200
 	if(distance < 0 )
 	{
 		distance = pRobot->ShooterDistance.distance;
 	}
-	float target = DistanceToHoodVal2(distance);
+	float target = DistanceToHoodVal3(distance);
 	ShooterDebug.PutNumber("Hood Target", target);
+	if(fabs(target)>fabs(MAX_HOOD_ANGLE))
+	{
+		target = MAX_HOOD_ANGLE;
+	}
 	if (true)
 	{
 		pRobot->Hood_Motor.Set(ControlMode::Position, target);
@@ -107,7 +128,7 @@ void Shooter::AutoHood(float distance)
 
 double Shooter::PIDGet()
 {
-    frc::SmartDashboard::PutNumber("PID Error", pRobot->MagicVision.HorizontalOffset());
+    ShooterDebug.PutNumber("PID Error", pRobot->MagicVision.HorizontalOffset());
 	return pRobot->MagicVision.HorizontalOffset();
 }
 
@@ -135,22 +156,89 @@ void Shooter::SpinUp()
 	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
 	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
 }
+void Shooter::SpinUpNEO(float speed)
+{
+	pRobot->Shooter_Motor_1_NEO.Set(speed);
+	pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+	ShooterDebug.PutNumber("Shooter Velocity", pRobot->Shooter_Encoder.GetVelocity());
+}
+float DistanceToPower(float distance)
+{
+	float power =  -(((.3/(16*30.48))*(distance-(8*30.48)))+.6);
+	if(power<-.85)
+	{
+		power = -.85;
+	}
+	return power;
+}
+float Shooter::SpinUpNEODistance(float distance, bool manual)
+{
+	if (distance<0)
+	{
+		distance = pRobot->ShooterDistance.distance;
+	}
+	float power = -DistanceToPower(distance);
 
+	ShooterDebug.PutNumber("Shooter Power", power);
+
+	#define MAX_NEO_SPEED	5380
+
+	float speed = power * MAX_NEO_SPEED;
+	ShooterDebug.PutNumber("Set Speed", speed);
+
+	if((!manual) || fabs(pRobot->DriverCMD.fManualShootSpeed())>.2 )
+	{
+		pRobot->Shooter_Motor_1_NEO.Set(power);
+		pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+	}
+	else
+	{
+		pRobot->Shooter_Motor_1_NEO.Set(0);
+		pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+	}
+
+	ShooterDebug.PutNumber("Velocity", pRobot->Shooter_Encoder.GetVelocity());
+	float velocityError = pRobot->Shooter_Encoder.GetVelocity() - speed;
+	if(fabs(velocityError)<400)
+	{
+		SmartDashboard::PutBoolean("Ready To Fire", true);
+	}
+	else
+	{
+		SmartDashboard::PutBoolean("Ready To Fire", false);
+	}
+	return velocityError;
+}
+
+void Shooter::SpinUpNEOVelocity(float power)
+{
+	float speed = power * MAX_NEO_SPEED;
+	ShooterDebug.PutNumber("Set Speed", speed);
+
+	if(fabs(pRobot->DriverCMD.fManualShootSpeed())>.2 )
+	{
+		pRobot->Shooter_PID_Controller.SetReference(speed, rev::ControlType::kVelocity, 0);
+		pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+	}
+	else
+	{
+		pRobot->Shooter_Motor_1_NEO.Set(0);
+		pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+	}
+	ShooterDebug.PutNumber("Velocity", pRobot->Shooter_Encoder.GetVelocity());
+}
 float Shooter::SpinUpDistance(float distance, bool manual)
 {
 	if (distance<0)
 	{
 		distance = pRobot->ShooterDistance.distance;
 	}
-	float power = -(((.3/(16*30.48))*(distance-(8*30.48)))+.6);
-	if(power<-.85)
-	{
-		power = -.85;
-	}
-	frc::SmartDashboard::PutNumber("Shooter Power", power);
+	float power = DistanceToPower(distance);
+	
+	ShooterDebug.PutNumber("Shooter Power", power);
 
 	float speed =  power*33700;//max 33700 encoder 4930 rpm
-	frc::SmartDashboard::PutNumber("Set Speed", speed);
+	ShooterDebug.PutNumber("Set Speed", speed);
 	
 	if((!manual) || fabs(pRobot->DriverCMD.fManualShootSpeed())>.2 )
 	{
@@ -164,8 +252,17 @@ float Shooter::SpinUpDistance(float distance, bool manual)
 	}
 
 	ShooterDebug.PutNumber("Velocity", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	return pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() - speed;
+	ShooterDebug.PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
+	float velocityError = pRobot->Shooter_Motor_1.GetSelectedSensorVelocity() - speed;
+	if(fabs(velocityError)<400)
+	{
+		SmartDashboard::PutBoolean("Ready To Fire", true);
+	}
+	else
+	{
+		SmartDashboard::PutBoolean("Ready To Fire", false);
+	}
+	return velocityError;
 	
 }
 
@@ -174,14 +271,22 @@ void Shooter::StopShoot()
 	pRobot->Shooter_Motor_1.Set(ControlMode::PercentOutput, 0);
 	pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
 }
+
+void Shooter::StopShootNEO()
+{
+	pRobot->Shooter_Motor_1_NEO.Set(0);
+	pRobot->Shooter_Motor_2_NEO.Follow(pRobot->Shooter_Motor_1_NEO);
+}
 void Shooter::ShooterGate(bool open)
 {
 	if (open)
 	{
+		SmartDashboard::PutString("Shooter Gate", "Open");
 		pRobot->Shooter_Solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 	}
 	else
 	{
+		SmartDashboard::PutString("Shooter Gate", "Closed");
 		pRobot->Shooter_Solenoid.Set(frc::DoubleSolenoid::Value::kForward);
 	}
 }
@@ -287,52 +392,52 @@ void Shooter::CountBalls()
 void Shooter::ShooterManual()
 {
 	CountBalls();
-	SpinUpDistance();
-	if(pRobot->DriverCMD.AutoAim())
-	{
-		Aim();
-	}
-	else
-	{
-		AimManual();
-	}
-	pFeeder->BottomFeeder(pRobot->DriverCMD.fBottomFeederSpeed());
-	pFeeder->TopFeeder(pRobot->DriverCMD.fTopFeederSpeed());
-	// float rawspeed = pRobot->DriverCMD.fManualShootSpeed();
-	// float speed =  rawspeed*33700;//max 33700 encoder 4930 rpm
-	// frc::SmartDashboard::PutNumber("Set Speed", speed);
-	// if(fabs(rawspeed)>.2 )
+	//SpinUpDistance();
+	// if(pRobot->DriverCMD.AutoAim())
 	// {
-	// 	pRobot->Shooter_Motor_1.Set(ControlMode::Velocity, speed);
-	// 	pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
+	// 	SpinUpNEODistance(-1, false);
 	// }
 	// else
 	// {
-	// 	pRobot->Shooter_Motor_1.Set(ControlMode::PercentOutput, 0);
-	// 	pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
+	// 	StopShootNEO();
 	// }
-	// pRobot->Shooter_Motor_1.Set(ControlMode::PercentOutput, pRobot->DriverCMD.fManualShootSpeed());
-	// pRobot->Shooter_Motor_2.Follow(pRobot->Shooter_Motor_1);
-	if(pRobot->DriverCMD.bTestButton(2))
-	{
-		AutoHood();
-	}
-	else
-	{
-		pRobot->Hood_Motor.Set(pRobot->DriverCMD.fManualHoodSpeed());
-	}
-	frc::SmartDashboard::PutNumber("Shoot Speed", pRobot->Shooter_Motor_1.GetSelectedSensorVelocity());
-	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
-	frc::SmartDashboard::PutNumber("Velocity Error", pRobot->Shooter_Motor_1.GetClosedLoopError());
+	// if(pRobot->DriverCMD.bShootPreset1())
+	// {
+	// 	AimNeo();
+	// 	pRobot->Hood_Motor.Set(ControlMode::Position, -1017);
+	// 	SpinUpNEO(.95);
+	// }
+	// else
+	// {
+		//SpinUpNEO(pRobot->DriverCMD.fManualShootSpeed());
+		// if(pRobot->DriverCMD.AutoAim() || pRobot->DriverCMD.bTestButton(2))
+		// {
+		// 	//Aim();
+		// 	AimNeo();
+		// }
+		// else
+		// {
+			AimManualNeo();
+			//AimManual();
+		// }
+		
+		// if(pRobot->DriverCMD.AutoAim())
+		// {
+		// 	AutoHood();
+		// 	SpinUpNEODistance(-1, false);
+		// 	//pRobot->Hood_Motor.Set(ControlMode::Position, -1000);
+		// }
+		// else
+		// {
+		// 	StopShootNEO();
+		   	pRobot->Hood_Motor.Set(pRobot->DriverCMD.fManualHoodSpeed());
+		// }
+	// }
+	SpinUpNEO(pRobot->DriverCMD.fManualShootSpeed());
+	pFeeder->BottomFeeder(pRobot->DriverCMD.fBottomFeederSpeed());
+	pFeeder->TopFeeder(pRobot->DriverCMD.fTopFeederSpeed());
+	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1_NEO.GetAppliedOutput());
 	ShooterGate(pRobot->DriverCMD.bShooterOpen());
-	if(pRobot->DriverCMD.bLimeLightOff)
-	{
-		pRobot->MagicVision.SetValue("ledMode", 1);
-	}
-	else
-	{
-		pRobot->MagicVision.SetValue("ledMode", 3);
-	}
 	
 }
 
@@ -340,5 +445,12 @@ void Shooter::AimManual()
 {
 	float speed = pRobot->DriverCMD.fManualTurretSpeed();
 	pRobot->Turret_Motor.Set(ControlMode::PercentOutput, speed);
+	ShooterDebug.PutNumber("Manual Turret Speed Old", speed);
+}
+
+void Shooter::AimManualNeo()
+{
+	float speed = pRobot->DriverCMD.fManualTurretSpeed();
+	pRobot->Turret_Neo.Set(speed);
 	ShooterDebug.PutNumber("Manual Turret Speed", speed);
 }

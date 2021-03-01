@@ -16,4 +16,6 @@ class Climber {
   void climbUpDown(float i);
   void rollClimber(float angle);
   void ClimbManual();
+
+  Debug   ClimberDebug{"/Subsystems/Climber"};
 };

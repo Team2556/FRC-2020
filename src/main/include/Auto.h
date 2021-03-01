@@ -30,7 +30,7 @@ class Auto {
   void AutoInit();
   void AutoPeriodic();
   float CurrentAutoPosition();
-  bool autoShoot(float distance, bool intake = false);
+  bool autoShoot(float distance, float hoodVal,  bool intake = false);
 
   void Auto1(); // far right side of field (from our perspective,) in line with our trench 3 ball
 
@@ -39,5 +39,5 @@ class Auto {
   int iCounter = 0; // counter used in various actions that neet timing
   bool bStateDone = false; // used in some states if the return from an active function signals the end of a state 
 
-  Debug   AutoDebug{"Auto"};
+  Debug   AutoDebug{"/Periods/Auto"};
 };

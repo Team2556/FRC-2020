@@ -14,6 +14,8 @@
 class Drivebase {
  public:
   Drivebase(Robot * pRobot);
+  void RampedDrive(float fForward, float fRotate, bool rampRotate);
+  void RampedTankDrive(float fLeft, float fRight);
   void ManualDrive(bool GyroEnabled);
   void AutoDrive(float fForward, float fRotate,  bool GyroEnabled = true);
   bool DriveDistance(float distance, bool reset, bool GyroEnabled = true);
@@ -26,7 +28,7 @@ class Drivebase {
   Robot * pRobot;
 
   
-  Debug DrivebaseDebug{"Drivebase"};
+  Debug DrivebaseDebug{"/Subsystems/Drivebase"};
 
   bool bRotatePrevious = false;
   int stopHoldCounter = 0;

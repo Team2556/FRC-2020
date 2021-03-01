@@ -1,0 +1,7 @@
+x distance cm
+y hood angle encoder unit
+a = 0.0012158
+b = -1.58349
+c = -163.159
+R^2 = 0.894
+

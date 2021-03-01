@@ -14,9 +14,9 @@ ControlPanel::ControlPanel(Robot * pRobot) {
 //Display RGB values from V3 color sensor to smartdashboard
 void ControlPanel::ColorTest() {
     frc::Color            detectedColor = ColorSensor.GetColor();
-    frc::SmartDashboard::PutNumber("Red Detected", detectedColor.red);
-    frc::SmartDashboard::PutNumber("Green Detected", detectedColor.green);
-    frc::SmartDashboard::PutNumber("Blue Detected", detectedColor.blue);
+    CPDebug.PutNumber("Red Detected", detectedColor.red);
+    CPDebug.PutNumber("Green Detected", detectedColor.green);
+    CPDebug.PutNumber("Blue Detected", detectedColor.blue);
 }
 
 //return a letter R, G, B, or Y representing the different possible colors 
@@ -28,25 +28,25 @@ char ControlPanel::DetermineColor() {
     if(colorsRGB[0] >= testVal && colorsRGB[1] <= testVal && colorsRGB[2] <= testVal) 
     {
         //Color is Red
-        frc::SmartDashboard::PutString("Color", "Red");
+        CPDebug.PutString("Color", "Red");
         return 'R';
     } 
     else if(colorsRGB[0] <= testVal && colorsRGB[1] >= testVal && colorsRGB[2] <= testVal) 
     {
         //Color is Green
-        frc::SmartDashboard::PutString("Color", "Green");
+        CPDebug.PutString("Color", "Green");
         return 'G';
     } 
     else if(colorsRGB[0] <= testVal && colorsRGB[1] >= testVal && colorsRGB[2] >= testVal) 
     {
         //Color is Blue
-        frc::SmartDashboard::PutString("Color", "Blue");
+        CPDebug.PutString("Color", "Blue");
         return 'B';
     } 
     else if(colorsRGB[0] >= testVal && colorsRGB[1] >= testVal && colorsRGB[2] <= testVal) 
     {
         //Color is Yellow
-        frc::SmartDashboard::PutString("Color", "Yellow");
+        CPDebug.PutString("Color", "Yellow");
         return 'Y';
     }
     else return 'X';
@@ -78,7 +78,7 @@ void ControlPanel::Rotate(int spinNum) {
 
     }
     
-    frc::SmartDashboard::PutNumber("Rotations", rotations);
+    CPDebug.PutNumber("Rotations", rotations);
 
 }
 
@@ -116,4 +116,21 @@ char ControlPanel::GetColorNeeded() {
     std::string gameData;
     gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
     return gameData[0];
+}
+
+bool ControlPanel::RotationControl(bool reset) {
+    static int counter = 0;
+    CPDebug.PutNumber("Rotate Counter", counter);
+    if(reset)
+    {
+        counter = 0;
+    }
+    if(counter < 300) {
+        pRobot->CtrlPanelMotor.Set(ControlMode::PercentOutput, 0.25);
+        counter++;
+        return false;
+    } else {
+        counter = 0;
+        return true;
+    }
 }

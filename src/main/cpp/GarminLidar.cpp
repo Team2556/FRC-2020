@@ -19,8 +19,8 @@ float GarminLidar::read()
 {
     uint8_t  distance_data[2];
     Lidar.Read(0x10, 2, distance_data);
-    frc::SmartDashboard::PutNumber("High Bit", distance_data[1]);
-    frc::SmartDashboard::PutNumber("Low Bit", distance_data[0]);
+    LidarDebug.PutNumber("High Bit", distance_data[1]);
+    LidarDebug.PutNumber("Low Bit", distance_data[0]);
     uint16_t truedistance;
     truedistance = (distance_data[1]<<8) | (distance_data[0]);
     return truedistance;
@@ -28,6 +28,7 @@ float GarminLidar::read()
 
 int GarminLidar::IterativeDistance()
 {
+    
     static int prevValue = -1;
     // if(dioTrigger.Get())
     // {

@@ -12,7 +12,7 @@ OI::OI()
 {
     CurrDriveMode = DriveMode::Manual;
     bIntakeOut = false;
-    
+    frc::SmartDashboard::PutString("CameraSelected", "1");
 }
 
 //==============================================================================
@@ -46,12 +46,22 @@ void OI::UpdateOI()
     if(Xbox1.GetStartButtonPressed())
     {
         flipDrive = !flipDrive;
+        if(flipDrive)
+        {
+            frc::SmartDashboard::PutString("CameraSelected", "1");
+        }
+        else
+        {
+            frc::SmartDashboard::PutString("CameraSelected", "0");
+        }
     }
     
     if(Xbox3.GetStartButtonPressed())
     {
         bLimeLightOff = !bLimeLightOff;
     }
+    frc::SmartDashboard::PutBoolean("Climber Up", climbUp);
+    bClimbUp();
 }
 
 bool OI::BreakAuto()
@@ -65,7 +75,7 @@ bool OI::BreakAuto()
     
 float OI::fMoveForward()
 {
-    return Xbox1.GetY(frc::XboxController::kLeftHand);
+    return -Xbox1.GetY(frc::XboxController::kLeftHand);
 }
 
 float OI::fStrafe()
@@ -73,15 +83,78 @@ float OI::fStrafe()
     return Xbox1.GetX(frc::XboxController::kLeftHand);
 }
 
+float OI::sign(float value)
+{
+    return (!std::signbit(value))*2 - 1;
+}
+
+std::string OI::GetCamera()
+{
+    // static bool Cam1 = false;
+    // bool switching = Xbox1.GetYButtonPressed();
+    // if(switching)
+    // {
+    //     Cam1 = !Cam1;
+    //     if(Cam1)
+    //     {
+    //         return "1";
+    //     }
+    //     else
+    //     {
+    //         return "0";
+    //     }
+    // }
+    // return "-1";
+    std::string returnString = "-1";
+    if(driveDirChanged)
+    {
+        if(flipDrive)
+        {
+            returnString = "1";
+        }
+        else
+        {
+            returnString = "0";
+        }
+    }
+    driveDirChanged = false;
+    return returnString;
+}
 
 float OI::fRotate()
 {
-    return -Xbox1.GetX(frc::XboxController::kRightHand);
+    #define MAX_ROTATE  .7
+    float speed = -Xbox1.GetX(frc::XboxController::kRightHand);
+    speed = pow(speed, 2)*.7*sign(speed);
+    if (speed < -MAX_ROTATE)
+    {
+        speed = -MAX_ROTATE;
+    }
+    if (speed > MAX_ROTATE)
+    {
+        speed = MAX_ROTATE;
+    }
+    return speed;
+}
+
+float OI::fTankLeft()
+{
+    return -Xbox1.GetY(frc::XboxController::kLeftHand);
+}
+
+float OI::fTankRight()
+{
+    return -Xbox1.GetY(frc::XboxController::kRightHand);
+}
+
+bool OI::bQuickTurn()
+{
+    return !Xbox1.GetBumper(frc::XboxController::kLeftHand);
 }
 
 bool OI::bManualRotate()
 {
-    if ((fRotate() > .2) || (fRotate() < -.2))
+    if ((fRotate() > .05) || (fRotate() < -.05))
         return true;
     else
         return false;
@@ -94,6 +167,10 @@ bool OI::bManualRotate()
 bool OI::Shoot()
 {
     return Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
+}
+bool OI::bShootPreset1()
+{
+    return Xbox2.GetStickButton(frc::XboxController::kLeftHand);
 }
 
 bool OI::EndShoot()
@@ -194,12 +271,20 @@ float OI::fTopFeederSpeed()
 
 float OI::fManualShootSpeed()
 {
-    float speed = -Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
-    if (Xbox3.GetPOV() == 0)
+    float speed = Xbox2.GetTriggerAxis(frc::XboxController::JoystickHand::kRightHand);
+    // if (Xbox3.GetPOV() == 0)
+    // {
+    //     speedMult += .01;
+    // }
+    // else if (Xbox3.GetPOV() == 180)
+    // {
+    //     speedMult -= .01;
+    // }
+    if(Xbox2.GetY(frc::XboxController::kLeftHand)<-.5)
     {
         speedMult += .01;
     }
-    else if (Xbox3.GetPOV() == 180)
+    else if(Xbox2.GetY(frc::XboxController::kLeftHand)>.5)
     {
         speedMult -= .01;
     }
@@ -214,14 +299,14 @@ float OI::fManualHoodSpeed()
 
 float OI::fManualTurretSpeed()
 {
-    return -Xbox2.GetX(frc::XboxController::JoystickHand::kRightHand);
+    return Xbox2.GetX(frc::XboxController::JoystickHand::kRightHand);
 }
 
 
 
 bool OI::CPRotate()
 {
-    return Xbox2.GetBumper(frc::XboxController::kLeftHand);
+    return Xbox1.GetXButtonPressed();
 }
 //==============================================================================
 
@@ -334,7 +419,7 @@ bool OI::bTestButton(int iButton)
             bButtonValue = Xbox1.GetAButton();
             break;
         case 7:
-            bButtonValue = Xbox1.GetBButtonPressed();
+            bButtonValue = Xbox1.GetBButton();
             break;
         case 8:
             bButtonValue = Xbox3.GetAButtonPressed();
