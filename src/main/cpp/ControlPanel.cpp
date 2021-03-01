@@ -57,6 +57,9 @@ int ControlPanel::DetermineColor() {
             previousColor = 0;
             return 0;
         }
+        //Color is Red
+        CPDebug.PutString("Color", "Red");
+        return 'R';
     } 
     else if(colorsRGB[2] >= 0.25) 
     {
@@ -71,6 +74,9 @@ int ControlPanel::DetermineColor() {
             previousColor = 2;
             return 2;
         }
+        //Color is Green
+        CPDebug.PutString("Color", "Green");
+        return 'G';
     } 
     else if(colorsRGB[0] <= 0.3) 
     {
@@ -85,6 +91,9 @@ int ControlPanel::DetermineColor() {
             previousColor = 1;
             return 1;
         }
+        //Color is Blue
+        CPDebug.PutString("Color", "Blue");
+        return 'B';
     } 
     else
     {
@@ -99,6 +108,9 @@ int ControlPanel::DetermineColor() {
             previousColor = 3;
             return 3;
         }
+        //Color is Yellow
+        CPDebug.PutString("Color", "Yellow");
+        return 'Y';
     }
 }
 
@@ -157,6 +169,8 @@ bool ControlPanel::Rotate(int spinNum) {
         colorNumInit = -1;
         return true;
     }
+    
+    CPDebug.PutNumber("Rotations", rotations);
 
     return false;
 }

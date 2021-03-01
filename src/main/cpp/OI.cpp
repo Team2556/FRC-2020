@@ -149,7 +149,7 @@ float OI::fTankRight()
 
 bool OI::bQuickTurn()
 {
-    return Xbox1.GetBumper(frc::XboxController::kLeftHand);
+    return !Xbox1.GetBumper(frc::XboxController::kLeftHand);
 }
 
 bool OI::bManualRotate()

@@ -401,38 +401,39 @@ void Shooter::ShooterManual()
 	// {
 	// 	StopShootNEO();
 	// }
-	if(pRobot->DriverCMD.bShootPreset1())
-	{
-		AimNeo();
-		pRobot->Hood_Motor.Set(ControlMode::Position, -1017);
-		SpinUpNEO(.95);
-	}
-	else
-	{
+	// if(pRobot->DriverCMD.bShootPreset1())
+	// {
+	// 	AimNeo();
+	// 	pRobot->Hood_Motor.Set(ControlMode::Position, -1017);
+	// 	SpinUpNEO(.95);
+	// }
+	// else
+	// {
 		//SpinUpNEO(pRobot->DriverCMD.fManualShootSpeed());
-		if(pRobot->DriverCMD.AutoAim() || pRobot->DriverCMD.bTestButton(2))
-		{
-			//Aim();
-			AimNeo();
-		}
-		else
-		{
+		// if(pRobot->DriverCMD.AutoAim() || pRobot->DriverCMD.bTestButton(2))
+		// {
+		// 	//Aim();
+		// 	AimNeo();
+		// }
+		// else
+		// {
 			AimManualNeo();
 			//AimManual();
-		}
+		// }
 		
-		if(pRobot->DriverCMD.AutoAim())
-		{
-			AutoHood();
-			SpinUpNEODistance(-1, false);
-			//pRobot->Hood_Motor.Set(ControlMode::Position, -1000);
-		}
-		else
-		{
-			StopShootNEO();
-			pRobot->Hood_Motor.Set(pRobot->DriverCMD.fManualHoodSpeed());
-		}
-	}
+		// if(pRobot->DriverCMD.AutoAim())
+		// {
+		// 	AutoHood();
+		// 	SpinUpNEODistance(-1, false);
+		// 	//pRobot->Hood_Motor.Set(ControlMode::Position, -1000);
+		// }
+		// else
+		// {
+		// 	StopShootNEO();
+		   	pRobot->Hood_Motor.Set(pRobot->DriverCMD.fManualHoodSpeed());
+		// }
+	// }
+	SpinUpNEO(pRobot->DriverCMD.fManualShootSpeed());
 	pFeeder->BottomFeeder(pRobot->DriverCMD.fBottomFeederSpeed());
 	pFeeder->TopFeeder(pRobot->DriverCMD.fTopFeederSpeed());
 	frc::SmartDashboard::PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1_NEO.GetAppliedOutput());

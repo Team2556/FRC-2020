@@ -54,7 +54,7 @@ void TeleopControl::TeleopMain()
     frc::SmartDashboard::PutString("Teleop State", "Manual");
     ManualMain();
     break;
-  case AutomationStateEnum::CPRotate:
+  case AutomationStateEnum::RotationControl:
     frc::SmartDashboard::PutString("Teleop State", "CP Rotate");
     BreakAuto = CtrlPanelObj->RotationControl(false);
     break;
@@ -74,7 +74,7 @@ void TeleopControl::TeleopMain()
   }
   if(pRobot->DriverCMD.CPRotate())
   {
-    AutomationState = AutomationStateEnum::CPRotate;
+    AutomationState = AutomationStateEnum::RotationControl;
     CtrlPanelObj->RotationControl(true);
   }
   if(pRobot->DriverCMD.bTestButton(8))

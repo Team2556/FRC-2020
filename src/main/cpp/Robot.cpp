@@ -103,6 +103,40 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   TeleopMain->TeleopMain();
+  //static bool state = false;
+  DriverCMD.UpdateOI();
+  pShooter->ShooterDebug.PutNumber("Hood Angle", Hood_Motor.GetSelectedSensorPosition());
+  pShooter->ShooterDebug.PutNumber("Target Power", DriverCMD.speedMult);
+  // float targetvalue = DriverCMD.fTestSelector(10);
+  // SmartDashboard::PutNumber("Target Hood Angle", targetvalue);
+
+  // if(DriverCMD.bTestButton(3))
+  // {
+  //   state = !state;
+  // }
+
+  // frc::SmartDashboard::PutBoolean("Auto Hood", state);
+  // if(state)
+  // {
+  //   Hood_Motor.Set(ControlMode::Position, targetvalue);
+    
+  // }
+  // else
+  // {
+  //   Hood_Motor.Set(DriverCMD.fManualHoodSpeed());
+  // }
+  // if(DriverCMD.AutoAim())
+	// {
+	// 	pShooter->Aim();
+	// }
+	// else
+	// {
+	// 	pShooter->AimManual();
+	// }
+  //pShooter->SpinUpNEO(-DriverCMD.fManualShootSpeed());
+  frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance);
+
+  
 }
 
 void Robot::TestPeriodic()

@@ -43,6 +43,8 @@ void Auto::AutoChooser()
     {
         AutoThree();
     }
+    //WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
+    AutoDebug.PutNumber("Encoder Position", CurrentAutoPosition());
 }
 
 void Auto::AutoPeriodic()
