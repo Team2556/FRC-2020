@@ -53,6 +53,13 @@ void Robot::RobotInit()
   Nav.Init(false);
   //Shooter_Motor_1.SetInverted(true);
   //Shooter_Motor_2.SetInverted(true);
+
+
+    AutoChooser.AddOption(Auto1, Auto1);
+    AutoChooser.AddOption(Auto2, Auto2);
+    AutoChooser.AddOption(Auto3, Auto3);
+    frc::SmartDashboard::PutData("Auto Selector", &AutoChooser);
+
   MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
   MotorControl_L1.GetEncoder().SetPosition(0);
 }
@@ -80,38 +87,21 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  AutoControl->iCounter = 0;
-  AutoControl->iState = 0;
-  Nav.SetCommandYawToCurrent();
   AutoControl->AutoInit();
-
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  frc::SmartDashboard::PutNumber("Auto Time", 15 - frc::DriverStation::GetInstance().GetMatchTime());
-  frc::SmartDashboard::PutNumber("Distance Traveled", m_encoder.GetPosition());
-  frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance); 
-  AutoControl->Auto1();
-  frc::SmartDashboard::PutNumber("Shoot Set Percent", Shooter_Motor_1.GetMotorOutputPercent());
+  AutoControl->AutoPeriodic();
 }
 
 void Robot::TeleopInit() 
 {
-  Nav.SetCommandYawToCurrent();
-  pShooter->rampspeed = 0;
-  
-  pShooter->BallsShot = 0;
   TeleopMain->TeleopInit();  
-  pShooter->BallsShot = 0;
 }
 
 void Robot::TeleopPeriodic() 
 {
-  //WestCoastDrive.ArcadeDrive(DriverCMD.fMoveForward(), DriverCMD.fRotate());
-  //float fRotate = 0.0;
-  //pShooter->TestShoot();
-  //pShooter->ShooterMain(); 
   TeleopMain->TeleopMain();
   //static bool state = false;
   DriverCMD.UpdateOI();

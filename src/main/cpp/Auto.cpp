@@ -19,25 +19,52 @@ Auto::Auto(Robot * pRobot, Drivebase * WestDrive, ControlPanel * CtrlPanelObj, S
     this->pFeeder       = pFeeder;
 }
 
+
 void Auto::AutoInit()
 {
     pRobot->m_encoder.SetPosition(0);
+    pRobot->AutoMode = pRobot->AutoChooser.GetSelected();
+    pRobot->Nav.SetCommandYawToCurrent();
+    iCounter = 0;
+    iState = 0;
 }
 
-void Auto::AutoPeriodic()
+void Auto::AutoChooser()
 {
+    if(pRobot->AutoMode == pRobot->Auto1)
+    {
+        AutoOne();
+    }
+    else if(pRobot->AutoMode == pRobot->Auto2)
+    {
+        AutoTwo();
+    }
+    else if(pRobot->AutoMode == pRobot->Auto3)
+    {
+        AutoThree();
+    }
     //WestDrive->AutoDrive((10-pRobot->MotorControl_L1.GetEncoder().GetPosition())*.4, 0);
     AutoDebug.PutNumber("Encoder Position", CurrentAutoPosition());
 }
 
-
+void Auto::AutoPeriodic()
+{
+    AutoDebug.PutString("Auto Version", pRobot->AutoChooser.GetSelected());
+    AutoDebug.PutNumber("Encoder Position", currentPosition);
+    AutoChooser();
+    AutoDebug.PutNumber("Auto Time", 15 - frc::DriverStation::GetInstance().GetMatchTime());
+    AutoDebug.PutNumber("Distance Traveled", pRobot->m_encoder.GetPosition());
+    AutoDebug.PutNumber("Distance", pRobot->ShooterDistance.distance); 
+    AutoDebug.PutNumber("Shoot Set Percent", pRobot->Shooter_Motor_1.GetMotorOutputPercent());
+}
 
 float Auto::CurrentAutoPosition()
 {
+
     return -pRobot->m_encoder.GetPosition();
 }
 
-void Auto::Auto1()
+void Auto::AutoOne()
 {
     float fForward = 0.0;
     float fRotate = 0.0;
@@ -155,7 +182,7 @@ void Auto::Auto1()
         iCounter++;
 
         
-        if(iCounter>1);
+        if(iCounter>1)
         {
             iState = 40;
             iCounter = 0;
@@ -184,7 +211,7 @@ void Auto::Auto1()
         //         iState = 100;
         //         iCounter = 0;
         //     }
-        // break;
+         break;
         case 100:
         default:
             WestDrive->AutoDrive(0.0, 0.0);
@@ -192,11 +219,15 @@ void Auto::Auto1()
     }
 }
 
+void Auto::AutoTwo()
+{
 
+}
 
-
-
-
+void Auto::AutoThree()
+{
+  
+}
 
 bool Auto::autoShoot(float distance, float hoodVal, bool intake)
 {

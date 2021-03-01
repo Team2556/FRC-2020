@@ -179,8 +179,8 @@ bool OI::EndShoot()
 }
 float OI::CPManualRotate()
 {
-    return 0.0;
-    if(Xbox2.GetXButton())
+     return 0.0;
+    if(Xbox3.GetXButton())
     {
         return 1.0;
     }
@@ -353,24 +353,7 @@ bool OI::bClimbUp()
 
 bool OI::CPToColor()
 {
-    return Xbox2.GetBumper(frc::XboxController::kRightHand);
-}
-
-bool OI::BarRoll()
-{
-    if(Xbox1.GetStartButton())
-    {
-        moveOnBar++;
-    }
-    if(moveOnBar % 2 == 1)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    
+    return Xbox3.GetBumper(frc::XboxController::kRightHand);
 }
 
 // ----------------------------------------------------------------------------

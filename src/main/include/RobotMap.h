@@ -41,8 +41,8 @@
 #define         CLIMB_UP                5
 #define         CLIMB_DOWN              4
 
-
 //DIO Ports
 #define         DIO_US_RANGE_TRIGGER    0
 #define         DIO_US_RANGE_PULSE      1
 
+#define         CPSERVO                 0
