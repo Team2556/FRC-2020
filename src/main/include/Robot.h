@@ -27,6 +27,7 @@
 #include "ctre/Phoenix.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
+#include "cameraserver/CameraServer.h"
 
 
 #include "RobotMap.h"
@@ -35,6 +36,7 @@
 #include "Limelight.h"
 #include "GarminLidar.h"
 #include "Debug.h"
+#include "BallTracker.h"
 
 
 
@@ -131,6 +133,9 @@ class Robot : public frc::TimedRobot {
   Limelight                   MagicVision;
   NavGyro                     Nav;
   GarminLidar                 ShooterDistance;
+  BallTracker                 BallFinder;
+
+  cs::UsbCamera               Camera1;
 
   frc::Servo                  CtrlServo{CPSERVO};
   

@@ -62,6 +62,11 @@ void Robot::RobotInit()
 
   MotorControl_L1.GetEncoder().SetPositionConversionFactor(1/9.6281914);
   MotorControl_L1.GetEncoder().SetPosition(0);
+
+  Camera1 = frc::CameraServer::GetInstance()->StartAutomaticCapture(0);
+  Camera1.SetResolution(640, 480);
+  Camera1.SetFPS(24);
+  BallFinder.Init();
 }
 
 
@@ -136,7 +141,14 @@ void Robot::TeleopPeriodic()
   //pShooter->SpinUpNEO(-DriverCMD.fManualShootSpeed());
   frc::SmartDashboard::PutNumber("Distance", ShooterDistance.distance);
 
-  
+  std::vector<FoundBall> balls = BallFinder.getBalls();
+  BallFinder.BallDebug.PutNumber("NumBalls", balls.size());
+  if(balls.size() > 0)
+  {
+    BallFinder.BallDebug.PutNumber("X", balls[0].x);
+    BallFinder.BallDebug.PutNumber("Y", balls[0].y);
+    BallFinder.BallDebug.PutNumber("Area", balls[0].area);
+  }  
 }
 
 void Robot::TestPeriodic()
